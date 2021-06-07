@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Application">
+      <UniqueIdentifier>{4ca63305-d083-453b-88a9-706f0a1ac180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModeServer">
+      <UniqueIdentifier>{f65d1d8e-b785-4c0b-a849-085fd92b4b60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="momoka">
+      <UniqueIdentifier>{d42bcf1e-8fb9-46cb-ad38-994c6846e075}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="static">
+      <UniqueIdentifier>{00c986f8-dae1-48b9-9317-7585cbadd6aa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\Application\ApplicationBase.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Application\WinMain.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Mode\ModeBase.cpp">
+      <Filter>ModeServer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Mode\ModeServer.cpp">
+      <Filter>ModeServer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\static\Input.cpp">
+      <Filter>static</Filter>
+    </ClCompile>
+    <ClCompile Include="source\static\ResourceServer.cpp">
+      <Filter>static</Filter>
+    </ClCompile>
+    <ClCompile Include="source\static\MouseInput.cpp">
+      <Filter>static</Filter>
+    </ClCompile>
+    <ClCompile Include="source\momoka\SoundManager.cpp">
+      <Filter>momoka</Filter>
+    </ClCompile>
+    <ClCompile Include="source\momoka\Model.cpp">
+      <Filter>momoka</Filter>
+    </ClCompile>
+    <ClCompile Include="source\momoka\Transform.cpp">
+      <Filter>momoka</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\Application\ApplicationBase.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Application\UtilMacro.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="source\appframe.h" />
+    <ClInclude Include="source\Mode\ModeBase.h">
+      <Filter>ModeServer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Mode\ModeServer.h">
+      <Filter>ModeServer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\static\Input.h">
+      <Filter>static</Filter>
+    </ClInclude>
+    <ClInclude Include="source\static\ResourceServer.h">
+      <Filter>static</Filter>
+    </ClInclude>
+    <ClInclude Include="source\static\MouseInput.h">
+      <Filter>static</Filter>
+    </ClInclude>
+    <ClInclude Include="source\momoka\SoundManager.h">
+      <Filter>momoka</Filter>
+    </ClInclude>
+    <ClInclude Include="source\momoka\Types.h">
+      <Filter>momoka</Filter>
+    </ClInclude>
+    <ClInclude Include="source\momoka\Model.h">
+      <Filter>momoka</Filter>
+    </ClInclude>
+    <ClInclude Include="source\momoka\Transform.h">
+      <Filter>momoka</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
