@@ -55,7 +55,9 @@ bool MazeStage::Initialize() {
 
 	//穴を空けた場所の座標を3D座標に変換
 	_pDoor->GetTransform().SetPosition({ BLOCK_SIZE * glx, 0.0f, BLOCK_SIZE * -gly });
-	_pDoor->GetTransform().SetScale({ 0.4f, 0.4f, 0.4f });
+	_pDoor->GetTransform().SetScale({ 0.5f, 0.4f, 0.5f });
+
+	SetUseLighting(FALSE);
 
 	return true;
 }
@@ -247,13 +249,13 @@ bool MazeStage::Process() {
 		float rad = atan2(vDir.z, vDir.x);
 
 		// 左右で角度変更
-		if (Input::_key[(KEY_INPUT_LEFT)] == 1) { rad += 1.f / MOVE_BLOCK_SPEED; }
-		if (Input::_key[(KEY_INPUT_RIGHT)] == 1) { rad -= 1.f / MOVE_BLOCK_SPEED; }
+		if (CheckHitKey(KEY_INPUT_LEFT) == 1) { rad += 1.f / MOVE_BLOCK_SPEED; }
+		if (CheckHitKey(KEY_INPUT_RIGHT) == 1) { rad -= 1.f / MOVE_BLOCK_SPEED; }
 
 		// 上下で向いている方向に移動
 		float fMove = 0.f;		// 0だと移動しない
-		if (Input::_key[(KEY_INPUT_UP)] == 1) { fMove = 1.f; }
-		if (Input::_key[(KEY_INPUT_DOWN)] == 1) { fMove = -1.f; }
+		if (CheckHitKey(KEY_INPUT_UP) == 1) { fMove = 1.f; }
+		if (CheckHitKey(KEY_INPUT_DOWN) == 1) { fMove = -1.f; }
 
 		// 移動倍率をかけて、向いている方向に移動する
 		vPlayer.x += vDir.x * fMove;

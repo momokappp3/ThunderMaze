@@ -2,7 +2,6 @@
 #include "DxLib.h"
 
 int Input::_key[256];  //static定義
-int Input::_longKey[256];  //static定義
 
 Input::Input() {
 
@@ -19,8 +18,6 @@ void Input::Process(){
     char tmpKey[256];
 
     GetHitKeyStateAll(tmpKey); // 全てのキーの入力状態を得る
-
-    //_longKey = tmpKey;
 
     for (int i = 0; i < 256; i++) {
         if (tmpKey[i] != 0) { // i番のキーコードに対応するキーが押されていたら

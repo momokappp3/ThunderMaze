@@ -16,5 +16,4 @@ public:
 	static void Process();
 
 	static int _key[256];
-	static int _longKey[256];
 };
