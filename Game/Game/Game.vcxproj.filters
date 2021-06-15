@@ -32,6 +32,12 @@
     <ClCompile Include="source\UI\UI2DBase.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="source\ModeClear.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UI\UIPopUp.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ModeTitle.h">
@@ -50,6 +56,12 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="source\UI\UI2DBase.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ModeClear.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UI\UIPopUp.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

@@ -36,6 +36,7 @@ bool ModeTitle::Initialize() {
 		return false;
 	}
 
+	_pKeyInput.reset(new Input);
 	_pNewGameString.reset(new UI2DSelectBase);
 	_pExitString.reset(new UI2DSelectBase);
 
@@ -91,7 +92,7 @@ bool ModeTitle::Process() {
 		}
 	}
 
-	if (Input::_key[(KEY_INPUT_RETURN)] == 1)	{
+	if (_pKeyInput->_key[(KEY_INPUT_RETURN)] == 1)	{
 		if (_nowMenuSelect == SelectMenu::NewGame) {
 			ModeServer::GetInstance()->Del(this);
 			ModeServer::GetInstance()->Add(new ModeGame(), 1, "game");
@@ -105,7 +106,7 @@ bool ModeTitle::Process() {
 		}
 	}
 
-	if (Input::_key[(KEY_INPUT_UP)] == 1) {
+	if (_pKeyInput->_key[(KEY_INPUT_UP)] == 1) {
 
 		int nowNum = static_cast<int>(_nowMenuSelect);
 
@@ -115,7 +116,7 @@ bool ModeTitle::Process() {
 		_nowMenuSelect = static_cast<SelectMenu>(nowNum);
 	}
 
-	if (Input::_key[(KEY_INPUT_DOWN)] == 1) {
+	if (_pKeyInput->_key[(KEY_INPUT_DOWN)] == 1) {
 
 		int nowNum = static_cast<int>(_nowMenuSelect);
 
@@ -129,7 +130,7 @@ bool ModeTitle::Process() {
 	_pNewGameString->SetSelect(_nowMenuSelect == SelectMenu::NewGame);
 	_pExitString->SetSelect(_nowMenuSelect == SelectMenu::Exit);
 
-	Input::Process();
+	_pKeyInput->Process();
 	MouseInput::Process();
 	_pNewGameString->Process();
 	_pExitString->Process();

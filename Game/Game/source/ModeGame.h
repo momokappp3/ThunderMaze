@@ -8,6 +8,8 @@
 #include "../../../AppFrame/source/appframe.h"
 #include <memory>
 #include "MazeStage.h"
+#include"UI/UIPopUp.h"
+#include "../../../AppFrame/source/momoka/Input.h"
 
 class ModeGame : public ModeBase{
 public:
@@ -19,5 +21,7 @@ public:
 	virtual bool Terminate();
 protected:
 
+	std::unique_ptr<Input> _pKeyInput;
 	std::unique_ptr<MazeStage> _pMazeStage;
+	std::unique_ptr<UIPopUp> _pUIPopUp;
 }; 

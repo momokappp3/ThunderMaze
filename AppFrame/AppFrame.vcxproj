@@ -163,10 +163,10 @@
     <ClCompile Include="source\Application\WinMain.cpp" />
     <ClCompile Include="source\Mode\ModeBase.cpp" />
     <ClCompile Include="source\Mode\ModeServer.cpp" />
+    <ClCompile Include="source\momoka\Input.cpp" />
     <ClCompile Include="source\momoka\Model.cpp" />
     <ClCompile Include="source\momoka\SoundManager.cpp" />
     <ClCompile Include="source\momoka\Transform.cpp" />
-    <ClCompile Include="source\static\Input.cpp" />
     <ClCompile Include="source\static\MouseInput.cpp" />
     <ClCompile Include="source\static\ResourceServer.cpp" />
   </ItemGroup>
@@ -176,11 +176,11 @@
     <ClInclude Include="source\Application\UtilMacro.h" />
     <ClInclude Include="source\Mode\ModeBase.h" />
     <ClInclude Include="source\Mode\ModeServer.h" />
+    <ClInclude Include="source\momoka\Input.h" />
     <ClInclude Include="source\momoka\Model.h" />
     <ClInclude Include="source\momoka\SoundManager.h" />
     <ClInclude Include="source\momoka\Transform.h" />
     <ClInclude Include="source\momoka\Types.h" />
-    <ClInclude Include="source\static\Input.h" />
     <ClInclude Include="source\static\MouseInput.h" />
     <ClInclude Include="source\static\ResourceServer.h" />
   </ItemGroup>

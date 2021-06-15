@@ -1,4 +1,4 @@
-/*****************************************************************//**
+/*****************************************************************
  * \file   ModeTitle.h
  * \brief  Titleシーンクラス
  * \author momoka
@@ -7,7 +7,7 @@
 #pragma once
 #include "../../../AppFrame/source/appframe.h"
 #include <memory>
-#include"../../../AppFrame/source/static/Input.h"
+#include"../../../AppFrame/source/momoka/Input.h"
 #include "UI/UI2DSelectBase.h"
 
 class ModeTitle : public ModeBase{
@@ -27,6 +27,7 @@ public:
 	virtual bool Terminate();
 
 protected:
+	std::unique_ptr<Input> _pKeyInput;
 	std::unique_ptr<UI2DSelectBase> _pNewGameString;
 	std::unique_ptr<UI2DSelectBase> _pExitString;
 

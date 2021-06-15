@@ -11,12 +11,24 @@
 #include "../../../AppFrame/source/static/ResourceServer.h"
 #include "ApplicationMain.h"
 #include "ModeGame.h"
-#include "../../../AppFrame/source/static/Input.h"
+#include "../../../AppFrame/source/momoka/Types.h"
 
 // 3D用
 #define BLOCK_SIZE 80.0f			// ブロックのサイズ
 #define CAMERA_Y (BLOCK_SIZE/2.f)	// カメラの高さ
-#define	MOVE_BLOCK_SPEED 10.f		// 1ブロック移動するフレーム数
+#define	MOVE_BLOCK_SPEED 20.f		// 1ブロック移動するフレーム数
+
+MazeStage::MazeStage() {
+
+	//_player3DPosi = { 0,0,0 };
+	//_lastPlayer3DPosi = { 0,0,0 };
+
+	_is3D = false;
+	_isDoorArea = false;
+}
+
+MazeStage::~MazeStage() {
+}
 
 bool MazeStage::Initialize() {
 
@@ -40,6 +52,8 @@ bool MazeStage::Initialize() {
 		}
 	}
 
+	_pKeyInput.reset(new Input);
+
 	// ゴール位置を、下端から選択
 	glx = ((rand() % (MAZE_W - 1) / 2)) * 2 + 1;
 	gly = MAZE_H - 1;
@@ -55,7 +69,7 @@ bool MazeStage::Initialize() {
 
 	//穴を空けた場所の座標を3D座標に変換
 	_pDoor->GetTransform().SetPosition({ BLOCK_SIZE * glx, 0.0f, BLOCK_SIZE * -gly });
-	_pDoor->GetTransform().SetScale({ 0.5f, 0.4f, 0.5f });
+	_pDoor->GetTransform().SetScale({ 0.9f, 0.65f, 0.0f });
 
 	SetUseLighting(FALSE);
 
@@ -138,8 +152,8 @@ void MazeStage::StageInit() {
 
 bool MazeStage::Process() {
 
-	int key = ApplicationMain::GetInstance()->GetKey();
-	int trg = ApplicationMain::GetInstance()->GetTrg();
+	//int key = ApplicationMain::GetInstance()->GetKey();
+	//int trg = ApplicationMain::GetInstance()->GetTrg();
 	int nModeCnt = _modeCount;  //ゲームクラスから取ってくる
 	int f = 0;	// ルート更新時1にする
 
@@ -156,16 +170,16 @@ bool MazeStage::Process() {
 		vDir.z = 1.f * playerSpeed;
 	}
 
-	if (play_mode == 0) {
+	if (!_is3D) {
 		// 2D
 		// Rを押しながらでない場合、主人公の移動
-		if (!(Input::_key[(KEY_INPUT_R)] == 1)) {
+		if (!(_pKeyInput->_key[(KEY_INPUT_R)] == 1)) {
 
 			// 主人公の移動
-			if (Input::_key[(KEY_INPUT_LEFT)] == 1) { plx--; f = 1; }
-			if (Input::_key[(KEY_INPUT_RIGHT)] == 1) { plx++; f = 1; }
-			if (Input::_key[(KEY_INPUT_UP)] == 1) { ply--; f = 1; }
-			if (Input::_key[(KEY_INPUT_DOWN)] == 1) { ply++; f = 1; }
+			if (_pKeyInput->_key[(KEY_INPUT_LEFT)] == 1) { plx--; f = 1; }
+			if (_pKeyInput->_key[(KEY_INPUT_RIGHT)] == 1) { plx++; f = 1; }
+			if (_pKeyInput->_key[(KEY_INPUT_UP)] == 1) { ply--; f = 1; }
+			if (_pKeyInput->_key[(KEY_INPUT_DOWN)] == 1) { ply++; f = 1; }
 
 			// 主人公の移動幅をマップ内に制限
 			if (plx < 0) { plx = 0; }
@@ -174,19 +188,19 @@ bool MazeStage::Process() {
 			if (ply >= MAZE_H) { ply = MAZE_H - 1; }
 
 			// スペースを押したらマップの壁をON/OFF
-			if (Input::_key[(KEY_INPUT_SPACE)] == 1) {
+			if (_pKeyInput->_key[(KEY_INPUT_SPACE)] == 1) {
 				maze[ply * MAZE_W + plx] = 1 - maze[ply * MAZE_W + plx];
 				f = 1;
 			}
 		}
 
 		// Rを押しながら上下左右でゴールの移動
-		if (Input::_key[(KEY_INPUT_R)] == 1) {
+		if (_pKeyInput->_key[(KEY_INPUT_R)] == 1) {
 			// ゴールの移動
-			if (Input::_key[(KEY_INPUT_LEFT)] == 1) { glx--; f = 1; }
-			if (Input::_key[(KEY_INPUT_RIGHT)] == 1) { glx++; f = 1; }
-			if (Input::_key[(KEY_INPUT_UP)] == 1) { gly--; f = 1; }
-			if (Input::_key[(KEY_INPUT_DOWN)] == 1) { gly++; f = 1; }
+			if (_pKeyInput->_key[(KEY_INPUT_LEFT)] == 1) { glx--; f = 1; }
+			if (_pKeyInput->_key[(KEY_INPUT_RIGHT)] == 1) { glx++; f = 1; }
+			if (_pKeyInput->_key[(KEY_INPUT_UP)] == 1) { gly--; f = 1; }
+			if (_pKeyInput->_key[(KEY_INPUT_DOWN)] == 1) { gly++; f = 1; }
 
 			// ゴールの移動幅をマップ内に制限
 			if (glx < 0) { glx = 0; }
@@ -195,27 +209,29 @@ bool MazeStage::Process() {
 			if (gly >= MAZE_H) { gly = MAZE_H - 1; }
 
 			// スペースを押したらマップの壁をON/OFF
-			if (Input::_key[(KEY_INPUT_SPACE)] == 1) {
+			if (_pKeyInput->_key[(KEY_INPUT_SPACE)] == 1) {
 				maze[gly * MAZE_W + glx] = 1 - maze[gly * MAZE_W + glx];
 				f = 1;
 			}
 		}
 
 		// Z,Xを押したら、ルートサーチカウンタを変更する
-		if (key & PAD_INPUT_1) { route_search--; f = 1; }
-		if (key & PAD_INPUT_2) { route_search++; f = 1; }
+		//if (key & PAD_INPUT_1) { route_search--; f = 1; }
+		//if (key & PAD_INPUT_2) { route_search++; f = 1; }
 
 		// A,Sを押したら、ルートサーチカウンタを大きく変更する
 //		if (key & PAD_INPUT_4) { route_search -= 10; f = 1; }
 //		if (key & PAD_INPUT_5) { route_search += 10; f = 1; }
 
 		// A,Sを押したら、ゲームモードを3Dに変更
-		if (Input::_key[(KEY_INPUT_A)] == 1) {
-			play_mode = 1;
+		if (_pKeyInput->_key[(KEY_INPUT_A)] == 1) {
+			_is3D = true;
 			// 今のプレイヤー座標を3D用座標に変換する
-			vPlayer.x = BLOCK_SIZE * plx;
-			vPlayer.y = 0.f;
-			vPlayer.z = BLOCK_SIZE * -ply;		// 左手座標だと、2DのYが大きくなるほど、3DのZは手前になる
+			_player3DPosi.x = BLOCK_SIZE * plx;
+			_player3DPosi.y = 0.f;
+			_player3DPosi.z = BLOCK_SIZE * -ply;		// 左手座標だと、2DのYが大きくなるほど、3DのZは手前になる
+
+			_lastPlayer3DPosi = _player3DPosi;
 		}
 
 		// ルートサーチカウンタを一定内に制限
@@ -223,26 +239,26 @@ bool MazeStage::Process() {
 		if (route_search > 255) { route_search = 255; }
 
 		// Qを押したら、ルートカウンタデバッグ表示
-		if (trg & PAD_INPUT_7) { draw_checkroute = 1; draw_route_c = 1; f = 1; }
+		//if (trg & PAD_INPUT_7) { draw_checkroute = 1; draw_route_c = 1; f = 1; }
 
 		// Dを押したら、ルートカウンタデバッグ表示を変更
-		if (trg & PAD_INPUT_6) { draw_route_c = 1 - draw_route_c; }
+		//if (trg & PAD_INPUT_6) { draw_route_c = 1 - draw_route_c; }
 
 		// Wを押したら、ルート生成デバッグ表示
-		if (trg & PAD_INPUT_8) { draw_makeroute = 1; draw_route_f = 1; f = 1; }
+		//if (trg & PAD_INPUT_8) { draw_makeroute = 1; draw_route_f = 1; f = 1; }
 
 		// Cを押したら、ルートフラグデバッグ表示を変更
-		if (trg & PAD_INPUT_3) { draw_route_f = 1 - draw_route_f; }
+		//if (trg & PAD_INPUT_3) { draw_route_f = 1 - draw_route_f; }
 	}
 	else {
 		// 3D
 		// A,Sを押したら、ゲームモードを3Dに変更
 		//if (trg & (PAD_INPUT_4 | PAD_INPUT_5)) {
-		if (Input::_key[(KEY_INPUT_A)] == 1) {
-			play_mode = 0;
+		if (_pKeyInput->_key[(KEY_INPUT_A)] == 1) {
+			_is3D = false;
 			// 今のプレイヤー座標を2D用座標に変換する
-			plx = vPlayer.x / BLOCK_SIZE;
-			ply = vPlayer.z / -BLOCK_SIZE;
+			plx = _player3DPosi.x / BLOCK_SIZE;
+			ply = _player3DPosi.z / -BLOCK_SIZE;
 		}
 
 		// 向いている方向のx,zから現在の角度を計算
@@ -254,18 +270,26 @@ bool MazeStage::Process() {
 
 		// 上下で向いている方向に移動
 		float fMove = 0.f;		// 0だと移動しない
+
 		if (CheckHitKey(KEY_INPUT_UP) == 1) { fMove = 1.f; }
 		if (CheckHitKey(KEY_INPUT_DOWN) == 1) { fMove = -1.f; }
 
 		// 移動倍率をかけて、向いている方向に移動する
-		vPlayer.x += vDir.x * fMove;
-		vPlayer.y += vDir.y * fMove;
-		vPlayer.z += vDir.z * fMove;
+		_player3DPosi.x += vDir.x * fMove;
+		_player3DPosi.y += vDir.y * fMove;
+		_player3DPosi.z += vDir.z * fMove;
 
 		// 角度から向いている方向を計算
 		vDir.x = cos(rad) * playerSpeed;
 		vDir.z = sin(rad) * playerSpeed;
 
+		if (!CheckPosition(_player3DPosi)) {
+			_player3DPosi = _lastPlayer3DPosi;
+			vDir = _lastDir;
+		}
+
+		_lastPlayer3DPosi = _player3DPosi;
+		_lastDir = vDir;
 	}
 
 	// 移動したならデータ更新
@@ -285,7 +309,7 @@ bool MazeStage::Process() {
 	draw_checkroute = 0;
 	draw_makeroute = 0;
 
-	Input::Process();
+	_pKeyInput->Process();
 	_pDoor->Process();
 
 	return true;
@@ -401,7 +425,7 @@ void MazeStage::GameDraw() {
 	// 描画速度計測用
 	unsigned int tStart = GetNowCount();
 
-	if (play_mode == 0) {
+	if (!_is3D) {
 		// 2D
 
 		// 迷路
@@ -431,11 +455,8 @@ void MazeStage::GameDraw() {
 			}
 		}
 
-		// ゴール
-		DrawGraph(glx * CHIP_W, gly * CHIP_H, cg[ECG_HEART], TRUE);
-
-		// プレイヤー
-		DrawGraph(plx * CHIP_W, ply * CHIP_H, cg[ECG_STAR], TRUE);
+		DrawGraph(glx * CHIP_W, gly * CHIP_H, cg[ECG_HEART], TRUE);  // 2Dゴール
+		DrawGraph(plx * CHIP_W, ply * CHIP_H, cg[ECG_STAR], TRUE);	// 2Dプレイヤー
 
 		// 情報表示
 		DrawFormatString(0, 720 - 16, GetColor(255, 255, 255), "search_time: %d, search_call: %d", search_time_ms, search_call_cnt);
@@ -451,7 +472,7 @@ void MazeStage::GameDraw() {
 		VECTOR CamTarg;		// カメラの注視点
 
 		// カメラの座標をセット
-		CamPos = vPlayer;
+		CamPos = _player3DPosi;
 		CamPos.y = CAMERA_Y;	// カメラの高さに変更する
 
 		// カメラの注視点をセット
@@ -520,14 +541,41 @@ void MazeStage::GameDraw() {
 						cntBuf++;
 					}
 
+					VECTOR goal = { static_cast<int>( BLOCK_SIZE * glx), 0.0f, static_cast<int>(BLOCK_SIZE * -gly )};
+					VECTOR t = VScale(vDir, 10.0f);  //方向に大きさをプラス
+					VECTOR endPlayerPosi = VAdd(_player3DPosi, t);  //始点座標から
+
+					//debug
+					//プレイヤーから伸びた線
+					DrawLine3D(_player3DPosi, endPlayerPosi, GetColor(255, 0, 0));
+
+					//ドアの当たり判定描画(円錐)
+					//DrawCone3D({ goal.x,goal.y + 1,goal.z }, goal, 50.0f, 0, GetColor(255, 255, 0), GetColor(0, 0, 0), FALSE);
+
+					VECTOR vertex1 = { goal.x - 40.0f,goal.y,goal.z};
+					VECTOR vertex2 = { goal.x + 40.0f,goal.y,goal.z};
+					VECTOR vertex3 = { goal.x,goal.y,goal.z + 40.0f };
+
+
+					//ドアの当たり判定描画(三角)
+					DrawTriangle3D(vertex1, vertex2, vertex3, GetColor(255, 255, 0),FALSE);
+
 					/*
-					// ワイヤフレームの描画
+					//ワイヤフレームの描画
 					for (int i = 0; i < pNum; i++) {
 						DrawLine3D(v[index[i * 3 + 0]].pos, v[index[i * 3 + 1]].pos, GetColor(255, 255, 255));
 						DrawLine3D(v[index[i * 3 + 1]].pos, v[index[i * 3 + 2]].pos, GetColor(255, 255, 255));
 						DrawLine3D(v[index[i * 3 + 2]].pos, v[index[i * 3 + 0]].pos, GetColor(255, 255, 255));
 					}
 					*/
+
+					//三角形と線分の当たり判定
+					if (HitCheck_Line_Triangle(_player3DPosi, endPlayerPosi, vertex1, vertex2, vertex3).HitFlag) {
+						_isDoorArea = true;
+					}
+					else {
+						_isDoorArea = false;
+					}
 				}
 			}
 		}
@@ -544,7 +592,33 @@ void MazeStage::GameDraw() {
 	
 	// 描画速度表示
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "%d", GetNowCount() - tStart);
-
-	// ページ切り替え
-	ScreenFlip();
+	//プレイヤーの座標
+	DrawFormatString(20, 50, GetColor(255, 255, 255), "プレイヤー(%.3f,0,%.3f)", _player3DPosi.x, _player3DPosi.z);
 }
+
+bool MazeStage::CheckPosition(VECTOR position) {
+
+	//3Dの座標を配列と比べる
+	auto w = static_cast<unsigned int>(position.x / BLOCK_SIZE);
+	auto h = static_cast<unsigned int>(-position.z / BLOCK_SIZE);
+
+	return maze[h * MAZE_W + w] == 0;
+}
+
+/*
+bool MazeStage::PlayerInTheCircle(VECTOR player, VECTOR opponent, int oppoRadi){
+
+	Point center = ui2DBase->GetCenter();
+	int radius = ui2DBase->GetRadius();
+	int squareRadius = radius * radius;
+
+	int vX = center.x - x;
+	int vY = center.y - y;
+	int squareSize = vX * vX + vY * vY;
+
+	return squareSize <= squareRadius ? 1 : 0;
+
+	return true;
+
+}
+*/

@@ -1,4 +1,9 @@
 ﻿  MazeStage.cpp
-C:\CmomokaDxlib_vc\個人製作\ThunderMaze\Game\Game\source\MazeStage.cpp(244,20): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\CmomokaDxlib_vc\個人製作\ThunderMaze\Game\Game\source\MazeStage.cpp(245,20): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\CmomokaDxlib_vc\個人製作\ThunderMaze\Game\Game\source\UI\UI2DBase.h(26,1): warning C4267: 'return': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\CmomokaDxlib_vc\個人製作\ThunderMaze\Game\Game\source\MazeStage.cpp(260,26): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\CmomokaDxlib_vc\個人製作\ThunderMaze\Game\Game\source\MazeStage.cpp(261,26): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\CmomokaDxlib_vc\個人製作\ThunderMaze\Game\Game\source\MazeStage.cpp(544,51): warning C4838: 'int' から 'float' への変換には縮小変換が必要です
+C:\CmomokaDxlib_vc\個人製作\ThunderMaze\Game\Game\source\MazeStage.cpp(544,51): warning C4244: '初期化中': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\CmomokaDxlib_vc\個人製作\ThunderMaze\Game\Game\source\MazeStage.cpp(544,93): warning C4838: 'int' から 'float' への変換には縮小変換が必要です
+C:\CmomokaDxlib_vc\個人製作\ThunderMaze\Game\Game\source\MazeStage.cpp(544,93): warning C4244: '初期化中': 'int' から 'float' への変換です。データが失われる可能性があります。
   Game.vcxproj -> C:\CmomokaDxlib_vc\個人製作\ThunderMaze\Game\x64\Debug\Game.exe

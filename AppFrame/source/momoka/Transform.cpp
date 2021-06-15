@@ -45,4 +45,5 @@ void Transform::Update() {
 
 	//MMult = s—ñ‚ÌŠ|‚¯Z
 	_mTransform = MMult(MMult(scale, posture), translate);
+
 }

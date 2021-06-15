@@ -157,18 +157,22 @@
   <ItemGroup>
     <ClCompile Include="source\ApplicationMain.cpp" />
     <ClCompile Include="source\MazeStage.cpp" />
+    <ClCompile Include="source\ModeClear.cpp" />
     <ClCompile Include="source\ModeGame.cpp" />
     <ClCompile Include="source\ModeTitle.cpp" />
     <ClCompile Include="source\UI\UI2DBase.cpp" />
     <ClCompile Include="source\UI\UI2DSelectBase.cpp" />
+    <ClCompile Include="source\UI\UIPopUp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ApplicationMain.h" />
     <ClInclude Include="source\MazeStage.h" />
+    <ClInclude Include="source\ModeClear.h" />
     <ClInclude Include="source\ModeGame.h" />
     <ClInclude Include="source\ModeTitle.h" />
     <ClInclude Include="source\UI\UI2DBase.h" />
     <ClInclude Include="source\UI\UI2DSelectBase.h" />
+    <ClInclude Include="source\UI\UIPopUp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

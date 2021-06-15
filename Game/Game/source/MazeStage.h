@@ -1,6 +1,6 @@
 /*****************************************************************//**
  * \file   MazeStage.h
- * \brief  ステージを生成するクラス
+ * \brief  ステージを生成する1人称動かせるクラス
  * \author momoka
  * \date 2021 5/28
  * details
@@ -9,21 +9,37 @@
 #include "Dxlib.h"
 #include "../../../AppFrame/source/momoka/Model.h"
 #include <memory>
+#include "../../../AppFrame/source/momoka/Input.h"
 
 class MazeStage{
 public:
+	MazeStage();
+	virtual ~MazeStage();
 	virtual bool Initialize();
 	virtual bool Terminate();
 	virtual bool Process();
 	virtual bool Render();
 
+	virtual bool CheckPosition(VECTOR position);
+
 	void GetModeCount(int num) {
 		_modeCount = num;
 	}
 
-protected:
+	bool GetIsDoorArea() {
+		return _isDoorArea;
+	}
+
+private:
+	void GameDraw();
+	void StageInit();
+	void _CheckChipRoute(int x1, int y1, int x2, int y2, int cntmax);
+	int CheckChipRoute(int x1, int y1, int x2, int y2, int cntmax);
+	int MakeShortRoute(int x1, int y1, int x2, int y2, int cntmax);
+	//bool PlayerInTheCircle(VECTOR player, VECTOR opponent, int oppoRadi);
 
 	std::unique_ptr<Model> _pDoor;
+	std::unique_ptr<Input> _pKeyInput;
 
 	static const int CHIP_W = 16;
 	static const int CHIP_H = 16;
@@ -73,19 +89,14 @@ protected:
 	int draw_route_f = 0;		// mazeroute_f[]を描画するか否か
 	int draw_makeroute = 0;		// MakeRoute()中に描画するか否か
 
-	// 3D表示用
-	int play_mode = 0;		// 0:2D, 1:3D
-	VECTOR vPlayer;		// プレイヤー座標
+	VECTOR _lastPlayer3DPosi;
+	VECTOR _player3DPosi;		// プレイヤー座標
+	VECTOR _lastDir;
 	VECTOR vDir;		// 向いている方向
 	float playerSpeed;	// 1フレームの移動力
 
-
-	// 関数群
-	void GameDraw();
-	void StageInit();
-	void _CheckChipRoute(int x1, int y1, int x2, int y2, int cntmax);
-	int CheckChipRoute(int x1, int y1, int x2, int y2, int cntmax);
-	int MakeShortRoute(int x1, int y1, int x2, int y2, int cntmax);
-
 	int _modeCount;
+
+	bool _is3D;
+	bool _isDoorArea;
 };

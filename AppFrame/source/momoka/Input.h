@@ -3,8 +3,7 @@
  * \brief  キーボードを簡単に呼び出す　静的クラス
  * \author momoka
  * \date   2021 1/21
- * \details 全て静的メンバで構成する
- *			使い方 = if (Input::_key[(KEY_INPUT_RETURN)] == 1) {}
+ * \details 使い方 = if (Input::_key[(KEY_INPUT_RETURN)] == 1) {}
  *********************************************************************/
 #pragma once
 
@@ -13,7 +12,7 @@ public:
 	Input();
 	virtual ~Input();
 
-	static void Process();
+	void Process();
 
-	static int _key[256];
+	int _key[256];
 };

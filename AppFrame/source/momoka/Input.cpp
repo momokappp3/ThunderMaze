@@ -1,8 +1,6 @@
 #include "Input.h"
 #include "DxLib.h"
 
-int Input::_key[256];  //static’è‹`
-
 Input::Input() {
 
     for (int i = 0; i < 256; i++) {

@@ -8,6 +8,7 @@
 #pragma once
 #include "Transform.h"
 #include <memory>
+#include <unordered_map>
 
 class Model {
 public:
@@ -21,7 +22,7 @@ public:
 	void Render();
 
 	Transform& GetTransform() {
-		return _pTransform;
+		return _pModelTransform;
 	}
 
 	int GetHandle() {
@@ -29,7 +30,8 @@ public:
 	}
 
 protected:
-	Transform _pTransform;
+	Transform _pModelTransform;
+	//std::unordered_map<int,Transform> _pFrameTransform;
 
 	int _handle;
 };

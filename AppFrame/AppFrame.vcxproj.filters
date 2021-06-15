@@ -27,9 +27,6 @@
     <ClCompile Include="source\Mode\ModeServer.cpp">
       <Filter>ModeServer</Filter>
     </ClCompile>
-    <ClCompile Include="source\static\Input.cpp">
-      <Filter>static</Filter>
-    </ClCompile>
     <ClCompile Include="source\static\ResourceServer.cpp">
       <Filter>static</Filter>
     </ClCompile>
@@ -43,6 +40,9 @@
       <Filter>momoka</Filter>
     </ClCompile>
     <ClCompile Include="source\momoka\Transform.cpp">
+      <Filter>momoka</Filter>
+    </ClCompile>
+    <ClCompile Include="source\momoka\Input.cpp">
       <Filter>momoka</Filter>
     </ClCompile>
   </ItemGroup>
@@ -60,9 +60,6 @@
     <ClInclude Include="source\Mode\ModeServer.h">
       <Filter>ModeServer</Filter>
     </ClInclude>
-    <ClInclude Include="source\static\Input.h">
-      <Filter>static</Filter>
-    </ClInclude>
     <ClInclude Include="source\static\ResourceServer.h">
       <Filter>static</Filter>
     </ClInclude>
@@ -79,6 +76,9 @@
       <Filter>momoka</Filter>
     </ClInclude>
     <ClInclude Include="source\momoka\Transform.h">
+      <Filter>momoka</Filter>
+    </ClInclude>
+    <ClInclude Include="source\momoka\Input.h">
       <Filter>momoka</Filter>
     </ClInclude>
   </ItemGroup>

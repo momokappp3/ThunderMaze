@@ -22,9 +22,12 @@ void Model::Process() {
 		return;
 	}
 
-	_pTransform.Update();
+	_pModelTransform.Update();
 
-	MV1SetMatrix(_handle, _pTransform.GetTransform());
+	MV1SetMatrix(_handle, _pModelTransform.GetTransform());
+
+	//for•¶‘S•”‰ñ‚·
+	//MV1SetFrameUserLocalMatrix(_handle, );
 }
 
 void Model::Render() {

@@ -4,6 +4,8 @@
  * \author momoka
  * \date   2021 6/2
  *********************************************************************/
+#include<String>
+#include<tchar.h>
 #pragma once
 
 struct Point {
@@ -13,6 +15,12 @@ struct Point {
 
 struct DrawInfo {
 	int handle;
+	Point xy;
+	bool isDraw;
+};
+
+struct PopString {
+	std::string string;
 	Point xy;
 	bool isDraw;
 };
