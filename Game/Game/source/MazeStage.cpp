@@ -12,6 +12,7 @@
 #include "ApplicationMain.h"
 #include "ModeGame.h"
 #include "../../../AppFrame/source/momoka/Types.h"
+#include "EffekseerForDXLib.h"
 
 // 3D用
 #define BLOCK_SIZE 80.0f			// ブロックのサイズ
@@ -25,9 +26,21 @@ MazeStage::MazeStage() {
 
 	_is3D = false;
 	_isDoorArea = false;
+	_isDoorAnim = false;
+
+	_effectLoadHandle = -1;
+	_effectPlayHandle = -1;
+
+	_effectTime = 0;
 }
 
 MazeStage::~MazeStage() {
+
+	// エフェクトリソースを削除する。(Effekseer終了時に破棄されるので削除しなくてもいい)
+	DeleteEffekseerEffect(_effectLoadHandle);
+
+	// Effekseerを終了する。
+	Effkseer_End();
 }
 
 bool MazeStage::Initialize() {
@@ -61,7 +74,7 @@ bool MazeStage::Initialize() {
 
 	//ゴールにドアモデルを設置
 	_pDoor.reset(new Model);
-	_pDoor->Load("model/door.mv1");
+	_pDoor->Load("model/doorAnime.mv1");
 
 	if (_pDoor->GetHandle() == -1) {
 		return false;
@@ -72,6 +85,21 @@ bool MazeStage::Initialize() {
 	_pDoor->GetTransform().SetScale({ 0.9f, 0.65f, 0.0f });
 
 	SetUseLighting(FALSE);
+
+	//==========================
+	//エフェクト
+
+	if (Effekseer_Init(8000) == -1){
+		return false;
+	}
+
+	_effectLoadHandle = LoadEffekseerEffect("pink.efk", 0.3f);
+
+	if (_effectLoadHandle == -1) {
+		return false;
+	}
+
+	//エフェクトの座標一旦保留
 
 	return true;
 }
@@ -482,6 +510,21 @@ void MazeStage::GameDraw() {
 		// カメラの位置と向きをセットする
 		SetCameraPositionAndTarget_UpVecY(CamPos, CamTarg);
 
+		//====================================================================
+		//エフェクト
+		Effekseer_Sync3DSetting();   //エフェクト
+				// 定期的にエフェクトを再生する
+		if (_effectTime % 60 == 0){
+			// エフェクトを再生する。
+			_effectPlayHandle = PlayEffekseer3DEffect(_effectLoadHandle);
+
+			// エフェクトの位置をリセットする。
+			//position_x = 0.0f;
+		}
+		//場所設定
+		SetPosPlayingEffekseer3DEffect(_effectPlayHandle,_player3DPosi.x + 200.0f,_player3DPosi.y, _player3DPosi.z);
+
+
 		// 迷路
 		// 先に最大値分の座標バッファ＆インデックスバッファを用意する
 		VERTEX3D* vBuf = new VERTEX3D[MAZE_W * MAZE_H * 8];		// ただし、indexBufがunsigned shortなので、65535を超えないように
@@ -545,21 +588,26 @@ void MazeStage::GameDraw() {
 					VECTOR t = VScale(vDir, 10.0f);  //方向に大きさをプラス
 					VECTOR endPlayerPosi = VAdd(_player3DPosi, t);  //始点座標から
 
-					//debug
-					//プレイヤーから伸びた線
-					DrawLine3D(_player3DPosi, endPlayerPosi, GetColor(255, 0, 0));
-
-					//ドアの当たり判定描画(円錐)
-					//DrawCone3D({ goal.x,goal.y + 1,goal.z }, goal, 50.0f, 0, GetColor(255, 255, 0), GetColor(0, 0, 0), FALSE);
-
+					
 					VECTOR vertex1 = { goal.x - 40.0f,goal.y,goal.z};
 					VECTOR vertex2 = { goal.x + 40.0f,goal.y,goal.z};
 					VECTOR vertex3 = { goal.x,goal.y,goal.z + 40.0f };
+					VECTOR vertex3Anime = { goal.x,goal.y,goal.z + 60.0f };
 
+					//door三角形と線分の当たり判定
+					if (HitCheck_Line_Triangle(_player3DPosi, endPlayerPosi, vertex1, vertex2, vertex3).HitFlag) {
+						_isDoorArea = true;
+					}
+					else {
+						_isDoorArea = false;
+					}
 
-					//ドアの当たり判定描画(三角)
-					DrawTriangle3D(vertex1, vertex2, vertex3, GetColor(255, 255, 0),FALSE);
+					//doorAnime当たり判定
+					if (HitCheck_Line_Triangle(_player3DPosi, endPlayerPosi, vertex1, vertex2, vertex3Anime).HitFlag) {
+						_isDoorAnim = true;
+					}
 
+					//debug
 					/*
 					//ワイヤフレームの描画
 					for (int i = 0; i < pNum; i++) {
@@ -569,13 +617,14 @@ void MazeStage::GameDraw() {
 					}
 					*/
 
-					//三角形と線分の当たり判定
-					if (HitCheck_Line_Triangle(_player3DPosi, endPlayerPosi, vertex1, vertex2, vertex3).HitFlag) {
-						_isDoorArea = true;
-					}
-					else {
-						_isDoorArea = false;
-					}
+					//プレイヤーから伸びた線
+					DrawLine3D(_player3DPosi, endPlayerPosi, GetColor(255, 30, 0));
+
+					//ドアエリアの当たり判定描画(三角)
+					DrawTriangle3D(vertex1, vertex2, vertex3, GetColor(255, 255, 0), FALSE);
+
+					//ドアアニメの当たり判定描画(三角)
+					DrawTriangle3D(vertex1, vertex2, vertex3Anime, GetColor(255, 30, 0), FALSE);
 				}
 			}
 		}
@@ -587,6 +636,13 @@ void MazeStage::GameDraw() {
 		delete[] vBuf;
 		delete[] indexBuf;
 
+		//=================================================
+		//エフェクト描画
+
+		UpdateEffekseer3D();  //エフェクトの更新
+		DrawEffekseer3D();
+		_effectTime++;
+
 		_pDoor->Render();
 	}
 	
@@ -596,29 +652,12 @@ void MazeStage::GameDraw() {
 	DrawFormatString(20, 50, GetColor(255, 255, 255), "プレイヤー(%.3f,0,%.3f)", _player3DPosi.x, _player3DPosi.z);
 }
 
+//3Dで壁が道が判定 trueだったら道
 bool MazeStage::CheckPosition(VECTOR position) {
 
-	//3Dの座標を配列と比べる
-	auto w = static_cast<unsigned int>(position.x / BLOCK_SIZE);
-	auto h = static_cast<unsigned int>(-position.z / BLOCK_SIZE);
+	//3Dの座標を配列と比べるmaze[y * MAZE_W + x]
+	auto w = static_cast<unsigned int>(position.x / BLOCK_SIZE + 0.5f);
+	auto h = static_cast<unsigned int>(-position.z / BLOCK_SIZE + 0.5f);
 
 	return maze[h * MAZE_W + w] == 0;
 }
-
-/*
-bool MazeStage::PlayerInTheCircle(VECTOR player, VECTOR opponent, int oppoRadi){
-
-	Point center = ui2DBase->GetCenter();
-	int radius = ui2DBase->GetRadius();
-	int squareRadius = radius * radius;
-
-	int vX = center.x - x;
-	int vY = center.y - y;
-	int squareSize = vX * vX + vY * vY;
-
-	return squareSize <= squareRadius ? 1 : 0;
-
-	return true;
-
-}
-*/

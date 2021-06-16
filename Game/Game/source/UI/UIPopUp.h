@@ -49,4 +49,5 @@ private:
     PopString _popString;
 
     int _key[256];
+    int _fontHandle;
 };

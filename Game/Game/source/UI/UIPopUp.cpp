@@ -10,6 +10,7 @@ UIPopUp::UIPopUp() {
 	_ok = false;
 	_nowMode = false;
 	_popString = { _T("初期化"),{0,0},false };
+	_fontHandle = -1;
 }
 
 UIPopUp::~UIPopUp() {
@@ -32,6 +33,10 @@ bool UIPopUp::Init() {
 		return false;
 	}
 	*/
+
+	//================
+	//文字列ハンドル
+	_fontHandle = CreateFontToHandle("UD デジタル 教科書体 N-B", 40,1);
 
 	_pPopUpBase.reset(new UI2DBase);
 	_pOkBSelectBase.reset(new UI2DSelectBase);
@@ -104,8 +109,11 @@ void UIPopUp::Draw() {
 		_pOkBSelectBase->Draw();
 
 		if (_popString.isDraw) {
+			/*
 			DrawFormatString(_popString.xy.x, _popString.xy.y, GetColor(255, 255, 255),
 							 _popString.string.c_str());
+			*/
+			DrawStringToHandle(_popString.xy.x, _popString.xy.y, _popString.string.c_str(),GetColor(33,30,85),_fontHandle);
 		}
 	}
 }

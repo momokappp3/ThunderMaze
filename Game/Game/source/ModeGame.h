@@ -10,6 +10,8 @@
 #include "MazeStage.h"
 #include"UI/UIPopUp.h"
 #include "../../../AppFrame/source/momoka/Input.h"
+#include "../../../AppFrame/source/momoka/SoundManager.h"
+#include "UI/UIHpGauge.h"
 
 class ModeGame : public ModeBase{
 public:
@@ -19,9 +21,18 @@ public:
 	virtual bool Process();
 	virtual bool Render();
 	virtual bool Terminate();
-protected:
+private:
 
 	std::unique_ptr<Input> _pKeyInput;
 	std::unique_ptr<MazeStage> _pMazeStage;
 	std::unique_ptr<UIPopUp> _pUIPopUp;
+	std::unique_ptr<UIHpGauge> _pHp;
+
+	bool _isBGM;
+	bool _isAnimEnd;
+
+	float _playTime;
+
+	int _attachDoorIndexRight;
+	int _attachDoorIndexLeft;
 }; 

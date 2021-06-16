@@ -1,4 +1,4 @@
-/*****************************************************************//**
+/*****************************************************************
  * \file   MazeStage.h
  * \brief  ステージを生成する1人称動かせるクラス
  * \author momoka
@@ -30,13 +30,24 @@ public:
 		return _isDoorArea;
 	}
 
+	bool GetIsDoorAnim() {
+		return _isDoorAnim;
+	}
+
+	bool GetIs3D() {
+		return _is3D;
+	}
+
+	int GetDoorHandle() {
+		return _pDoor->GetHandle();
+	}
+
 private:
 	void GameDraw();
 	void StageInit();
 	void _CheckChipRoute(int x1, int y1, int x2, int y2, int cntmax);
 	int CheckChipRoute(int x1, int y1, int x2, int y2, int cntmax);
 	int MakeShortRoute(int x1, int y1, int x2, int y2, int cntmax);
-	//bool PlayerInTheCircle(VECTOR player, VECTOR opponent, int oppoRadi);
 
 	std::unique_ptr<Model> _pDoor;
 	std::unique_ptr<Input> _pKeyInput;
@@ -99,4 +110,13 @@ private:
 
 	bool _is3D;
 	bool _isDoorArea;
+	bool _isDoorAnim;
+
+	//===========
+	//エフェクト
+
+	int _effectLoadHandle;
+	int _effectPlayHandle;
+
+	int _effectTime;
 };
