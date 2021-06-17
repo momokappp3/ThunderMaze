@@ -25,7 +25,7 @@ SoundManager::~SoundManager() {
 bool SoundManager::Init() {
 
 	_vBgmFileName.push_back(_T("mp3/titleBGM.mp3"));
-	//_vBgmFileName.push_back(_T("mp3/gameBGM.mp3"));
+	_vBgmFileName.push_back(_T("mp3/gameBGM.mp3"));
 
 	return true;
 }

@@ -23,7 +23,7 @@ public:
 	void Forward(float speed);
 	void SetRotateY(float angle);
 	void AddRotateY(float angle);
-	void ADDRotateYFrame(int frame, float angle);
+	//void ADDRotateYFrame(int frame, float angle);
 	void Update();
 
 	void SetScale(VECTOR scale) {

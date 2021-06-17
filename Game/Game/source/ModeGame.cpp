@@ -10,6 +10,8 @@ ModeGame::ModeGame() {
 	_pMazeStage = nullptr;
 	_pHp = nullptr;
 	_pUIPopUp = nullptr;
+	_pUITime = nullptr;
+	_pUIItem = nullptr;
 
 	_isBGM = false;
 	_isAnimEnd = false;
@@ -44,10 +46,15 @@ bool ModeGame::Initialize() {
 	_pMazeStage.reset(new MazeStage);
 	_pUIPopUp.reset(new UIPopUp);
 	_pHp.reset(new UIHpGauge);
+	_pUITime.reset(new UITime);
+	_pUIItem.reset(new UIItem);
 
-	if(!_pMazeStage->Initialize() || !_pUIPopUp->Init() || !_pHp->Init()) {
+	if(!_pMazeStage->Initialize() || !_pUIPopUp->Init() || !_pHp->Init() || !_pUITime->Init(999,3) ||
+	   !_pUIItem->Init()) {
 		return false;
 	}
+
+	_pHp->InitHP(2000);
 
 	return true;
 }
@@ -59,29 +66,38 @@ bool ModeGame::Process() {
 		if (_pSoundManager != nullptr) {
 			_pSoundManager->PlayBgm(SoundManager::BGM::InGame);
 			_isBGM = true;
+			_pUITime->SetStart(120);
 		}
 	}
 
 	_pMazeStage->GetModeCount(GetModeCount());
 
-	//0が右3が左
+	//ドアのアニメーション 0が右 3が左
 	if (_pMazeStage->GetIsDoorAnim()) {
-
 		if (!_isAnimEnd) {
 			_playTime += 0.1f;
-
 			_attachDoorIndexRight = MV1AttachAnim(_pMazeStage->GetDoorHandle(), 0, -1, FALSE);
 			_attachDoorIndexLeft = MV1AttachAnim(_pMazeStage->GetDoorHandle(), 3, -1, FALSE);
 		}
 	}
 
+	//攻撃が当たったら
+	if (_pMazeStage->GetIsHit()) {
+		_pHp->SetHp(1500);
+	}
+
+	//エスケープキーでタイトルに
 	 if (CheckHitKey(KEY_INPUT_ESCAPE) == 1) {  //Titleに戻る処理
 		 //popUp表示
 		 //popUpOKならタイトルへ行く
 		ModeServer::GetInstance()->Del(this);
 		ModeServer::GetInstance()->Add(new ModeTitle(), 1, "title");
 	}
-	
+
+
+	 //=================================================
+	 //DoorのPopUp表示クリアに行く処理
+
 	 if (_pMazeStage->GetIsDoorArea()) {
 		 _pUIPopUp->SetNowMode(true);
 		 _pUIPopUp->SetPopString({ "ここから出る" ,573,403,true });
@@ -99,6 +115,7 @@ bool ModeGame::Process() {
 		 _pUIPopUp->SetNowMode(false);
 	 }
 
+	 _pUITime->Process();
 	 _pUIPopUp->Process();
 	 _pHp->Process();
 	 MouseInput::Process();
@@ -113,9 +130,11 @@ bool ModeGame::Render() {
 	ModeBase::Render();
 	_pMazeStage->Render();
 	_pUIPopUp->Draw();
-
+	_pUITime->Draw();
+;
 	if (_pMazeStage->GetIs3D()) {
 		_pHp->Draw();
+		_pUIItem->Draw();
 	}
 
 	if (_pMazeStage->GetIsDoorArea()) {
@@ -124,7 +143,7 @@ bool ModeGame::Render() {
 	}
 
 	if (_pMazeStage->GetIsDoorAnim()) {
-		DrawFormatString(500, 500, GetColor(0, 128, 128), "HITAnim");
+		//DrawFormatString(500, 500, GetColor(0, 128, 128), "HITAnim");
 		MV1SetAttachAnimTime(_pMazeStage->GetDoorHandle(), _attachDoorIndexRight, _playTime);
 		MV1SetAttachAnimTime(_pMazeStage->GetDoorHandle(), _attachDoorIndexLeft, _playTime);
 	}

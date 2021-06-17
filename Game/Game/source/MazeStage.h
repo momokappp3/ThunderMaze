@@ -38,6 +38,10 @@ public:
 		return _is3D;
 	}
 
+	bool GetIsHit() {
+		return _isHit;
+	}
+
 	int GetDoorHandle() {
 		return _pDoor->GetHandle();
 	}
@@ -111,12 +115,18 @@ private:
 	bool _is3D;
 	bool _isDoorArea;
 	bool _isDoorAnim;
+	bool _isHit;
 
 	//===========
 	//エフェクト
 
 	int _effectLoadHandle;
 	int _effectPlayHandle;
+	int _effectPlayHandle2;
 
 	int _effectTime;
+
+	//===============
+	//当たり判定
+	VECTOR _attack3DPosi;
 };

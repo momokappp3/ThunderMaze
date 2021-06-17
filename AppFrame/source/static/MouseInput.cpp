@@ -22,5 +22,5 @@ void MouseInput::Process(){
 
 void MouseInput::Draw() {
 
-	DrawFormatString(20, 500, GetColor(255, 255, 255), "マウスの座標( %d, %d )", _posX, _posY);
+	DrawFormatString(20, 300, GetColor(255, 255, 255), "マウスの座標( %d, %d )", _posX, _posY);
 }

@@ -17,7 +17,7 @@ public:
     void Process()override;
     void Draw()override;
 
-    bool InitHP(int hp) {
+    void InitHP(int hp) {
         _hp = hp;
         _nowHp = hp;
         _nextHp = hp;

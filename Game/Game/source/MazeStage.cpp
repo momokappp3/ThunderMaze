@@ -27,9 +27,11 @@ MazeStage::MazeStage() {
 	_is3D = false;
 	_isDoorArea = false;
 	_isDoorAnim = false;
+	_isHit = false;
 
 	_effectLoadHandle = -1;
 	_effectPlayHandle = -1;
+	_effectPlayHandle2 = -1;
 
 	_effectTime = 0;
 }
@@ -514,16 +516,17 @@ void MazeStage::GameDraw() {
 		//エフェクト
 		Effekseer_Sync3DSetting();   //エフェクト
 				// 定期的にエフェクトを再生する
-		if (_effectTime % 60 == 0){
+		if (_effectTime % 100 == 0){
 			// エフェクトを再生する。
 			_effectPlayHandle = PlayEffekseer3DEffect(_effectLoadHandle);
+			_effectPlayHandle2 = PlayEffekseer3DEffect(_effectLoadHandle);
 
 			// エフェクトの位置をリセットする。
-			//position_x = 0.0f;
+			_attack3DPosi = _player3DPosi;
 		}
 		//場所設定
-		SetPosPlayingEffekseer3DEffect(_effectPlayHandle,_player3DPosi.x + 200.0f,_player3DPosi.y, _player3DPosi.z);
-
+		SetPosPlayingEffekseer3DEffect(_effectPlayHandle2,_player3DPosi.x + 200.0f,_player3DPosi.y, _player3DPosi.z);
+		SetPosPlayingEffekseer3DEffect(_effectPlayHandle, _attack3DPosi.x, _attack3DPosi.y, _attack3DPosi.z);
 
 		// 迷路
 		// 先に最大値分の座標バッファ＆インデックスバッファを用意する
@@ -607,6 +610,17 @@ void MazeStage::GameDraw() {
 						_isDoorAnim = true;
 					}
 
+					//================
+					//雷とプレイヤーの当たり判定
+
+					if (_player3DPosi.x == _attack3DPosi.x) {
+						_isHit = true;
+					}
+					else {
+						_isHit = false;
+					}
+
+
 					//debug
 					/*
 					//ワイヤフレームの描画
@@ -618,13 +632,13 @@ void MazeStage::GameDraw() {
 					*/
 
 					//プレイヤーから伸びた線
-					DrawLine3D(_player3DPosi, endPlayerPosi, GetColor(255, 30, 0));
+					//DrawLine3D(_player3DPosi, endPlayerPosi, GetColor(255, 30, 0));
 
 					//ドアエリアの当たり判定描画(三角)
-					DrawTriangle3D(vertex1, vertex2, vertex3, GetColor(255, 255, 0), FALSE);
+					//DrawTriangle3D(vertex1, vertex2, vertex3, GetColor(255, 255, 0), FALSE);
 
 					//ドアアニメの当たり判定描画(三角)
-					DrawTriangle3D(vertex1, vertex2, vertex3Anime, GetColor(255, 30, 0), FALSE);
+					//DrawTriangle3D(vertex1, vertex2, vertex3Anime, GetColor(255, 30, 0), FALSE);
 				}
 			}
 		}
@@ -655,7 +669,7 @@ void MazeStage::GameDraw() {
 //3Dで壁が道が判定 trueだったら道
 bool MazeStage::CheckPosition(VECTOR position) {
 
-	//3Dの座標を配列と比べるmaze[y * MAZE_W + x]
+	//3Dの座標を2Dの配列と比べるmaze[y * MAZE_W + x] (3397)
 	auto w = static_cast<unsigned int>(position.x / BLOCK_SIZE + 0.5f);
 	auto h = static_cast<unsigned int>(-position.z / BLOCK_SIZE + 0.5f);
 
