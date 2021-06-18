@@ -5,17 +5,14 @@
 
 UITime::UITime() {
 
-	_startTime = 0;
-	_startNum = 0;
-	_nowNum = 0;
-
-	_isStart = false;
 	_isStop = false;
 	_isEnd = false;
-	_isEndNow = false;
+	_isTimeEnd = false;
 
-	//_pTimeBase = nullptr;
-    _pUINumber = nullptr;
+	_pTimer = nullptr;
+	_pUIMinutes = nullptr;
+	_pCenter = nullptr;
+    _pUISeconds = nullptr;
 
     _maxNum = 0;
 }
@@ -23,22 +20,22 @@ UITime::UITime() {
 UITime:: ~UITime() {
 }
 
-bool UITime::Init(int maxNum ,int digit) {
+bool UITime::Init() {
 
-    _maxNum = maxNum;
+	_pTimer.reset(new Timer);
+	_pUIMinutes.reset(new UINumber);
+	_pCenter.reset(new UI2DBase);
+    _pUISeconds.reset(new UINumber);
 
-    _pUINumber.reset(new UINumber);
-	//_pTimeBase.reset(new UI2DBase);
-
-	//int handle = ResourceServer::LoadGraph("png/galUI/numBase.png");
-	/*
+	int handle = ResourceServer::LoadGraph("png/gameUI/number/time_center.png");
+	
 	if (handle == -1) {
 		return false;
-	}*/
+	}
 
-	//DrawInfo info = { handle,180,195,true};
+	DrawInfo info = { handle,1080,20,true};  //:
 
-	//_pTimeBase->SetDrawInfo(info);
+	_pCenter->SetDrawInfo(info);
 
 	std::array<int, 10> trustHandle{
 	ResourceServer::LoadGraph("png/gameUI/number/trust0.png"),
@@ -52,77 +49,53 @@ bool UITime::Init(int maxNum ,int digit) {
 	ResourceServer::LoadGraph("png/gameUI/number/trust8.png"),
 	ResourceServer::LoadGraph("png/gameUI/number/trust9.png"),
 	};
-	
-	DrawInfo info;
 
 	for (int i = 0; i < 10; i++) {
-		info = { trustHandle[i] ,300,270,true};
+		info = { trustHandle[i] ,0,0,true};
 
-		_pUINumber->SetDrawInfo(info);
+		_pUISeconds->SetDrawInfo(info);
+		_pUIMinutes->SetDrawInfo(info);
 	}
 	
-	_pUINumber->SetPoint({ 1122,30 });
+	_pUIMinutes->SetPoint({1000,20});  //•ª
+	_pUISeconds->SetPoint({ 1180,20 });  //•b
 
-	_pUINumber->Init(digit);
-
-	DrawInfo infoInit;
-	//_pTimeBase->GetDrawInfo(0, infoInit);
-	_pUINumber->GetDrawInfo(0, infoInit);
+	_pUIMinutes->Init(1);
+	_pUISeconds->Init(2);
 
 	return true;
 }
 
 void UITime::Process() {
 
-	//_pTimeBase->Process();
-	_pUINumber->Process();
+	Point time = _pTimer->GetNowTimeMinutes();  //•Ô‚è’l‚ª‚¨‚©‚µ‚¢
 
-	if (!_isStart || _isEnd || _isStop) {
-		return;
+	_pUIMinutes->SetNum(time.x);
+	_pUISeconds->SetNum(time.y);
+	
+	if (time.x == 0 && time.y ==0 ) {
+		_isTimeEnd = true;
 	}
 
-	int nowTime = GetNowCount() - _startTime;
-	int nowSecond = nowTime / 1000;
-	int nowNum = _startNum - nowSecond;
-
-	if (_nowNum != nowNum) {
-		_nowNum = nowNum;
-
-		if (_nowNum < 0) {
-			_nowNum = 0;
-		}
-
-		if (_nowNum == 0) {
-			_isEnd = true;
-			_isEndNow = true;
-		}
-
-		_pUINumber->SetNum(_nowNum);
-	}
-	/*
-	if (_isEnd) {
-		_isEndNow = true;
-	}
-	*/
+	_pUIMinutes->Process();
+	_pCenter->Process();
+	_pUISeconds->Process();
+	_pTimer->Process();
 }
 
 void UITime::Draw() {
-	//_pTimeBase->Draw();
-    _pUINumber->Draw();
-	_isEndNow = false;
+	_pUIMinutes->Draw();
+	_pCenter->Draw();
+    _pUISeconds->Draw();
 }
 
-void UITime::SetStart(int startNum) {
+void UITime::SetStart(int minutes, int seconds) {
 
-	_isStart = true;
 	_isEnd = false;
 	_isStop = false;
 
-	_startNum = startNum;
-	_nowNum = startNum;
+	_pTimer->SetStartMinutes(minutes,seconds);
 
-	_startTime = GetNowCount();  //‹N“®‚µ‚Ä‚©‚ç‚Ç‚ê‚­‚ç‚¢‚½‚Á‚½‚©
-
-	_pUINumber->SetNum(startNum);
-
+	_pUIMinutes->SetNum(minutes);
+	_pUISeconds->SetNum(seconds);
 }

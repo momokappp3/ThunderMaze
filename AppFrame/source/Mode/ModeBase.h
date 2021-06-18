@@ -23,7 +23,6 @@ public:
 	virtual bool Render();
 	virtual bool Terminate();
 
-public:
 	int	GetModeCount() { return _cntMode; }			// このモードが始まってからのカウンタ
 	unsigned long GetModeTm() { return _tmMode; }	// このモードが始まってからの時間ms
 	unsigned long GetStepTm() { return _tmStep; }	// 前フレームからの経過時間ms

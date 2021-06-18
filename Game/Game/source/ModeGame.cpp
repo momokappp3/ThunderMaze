@@ -49,7 +49,7 @@ bool ModeGame::Initialize() {
 	_pUITime.reset(new UITime);
 	_pUIItem.reset(new UIItem);
 
-	if(!_pMazeStage->Initialize() || !_pUIPopUp->Init() || !_pHp->Init() || !_pUITime->Init(999,3) ||
+	if(!_pMazeStage->Initialize() || !_pUIPopUp->Init() || !_pHp->Init() || !_pUITime->Init() ||
 	   !_pUIItem->Init()) {
 		return false;
 	}
@@ -66,7 +66,7 @@ bool ModeGame::Process() {
 		if (_pSoundManager != nullptr) {
 			_pSoundManager->PlayBgm(SoundManager::BGM::InGame);
 			_isBGM = true;
-			_pUITime->SetStart(120);
+			_pUITime->SetStart(3,20);
 		}
 	}
 
@@ -88,8 +88,6 @@ bool ModeGame::Process() {
 
 	//エスケープキーでタイトルに
 	 if (CheckHitKey(KEY_INPUT_ESCAPE) == 1) {  //Titleに戻る処理
-		 //popUp表示
-		 //popUpOKならタイトルへ行く
 		ModeServer::GetInstance()->Del(this);
 		ModeServer::GetInstance()->Add(new ModeTitle(), 1, "title");
 	}
@@ -97,7 +95,6 @@ bool ModeGame::Process() {
 
 	 //=================================================
 	 //DoorのPopUp表示クリアに行く処理
-
 	 if (_pMazeStage->GetIsDoorArea()) {
 		 _pUIPopUp->SetNowMode(true);
 		 _pUIPopUp->SetPopString({ "ここから出る" ,573,403,true });
@@ -137,13 +134,7 @@ bool ModeGame::Render() {
 		_pUIItem->Draw();
 	}
 
-	if (_pMazeStage->GetIsDoorArea()) {
-		//debug
-		//DrawFormatString(500, 500, GetColor(0, 128, 128), "HIT");
-	}
-
 	if (_pMazeStage->GetIsDoorAnim()) {
-		//DrawFormatString(500, 500, GetColor(0, 128, 128), "HITAnim");
 		MV1SetAttachAnimTime(_pMazeStage->GetDoorHandle(), _attachDoorIndexRight, _playTime);
 		MV1SetAttachAnimTime(_pMazeStage->GetDoorHandle(), _attachDoorIndexLeft, _playTime);
 	}

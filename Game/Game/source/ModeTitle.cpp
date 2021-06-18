@@ -78,6 +78,8 @@ bool ModeTitle::Initialize() {
 	_pNewGameString->SetOnSelect(onSelect);
 	_pExitString->SetOnSelect(onSelect);
 
+	//Timer::SetStartSeconds(500);
+
 	return true;
 }
 

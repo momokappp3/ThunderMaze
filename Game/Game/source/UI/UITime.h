@@ -1,6 +1,6 @@
 /*****************************************************************//**
  * \file   UITime.h
- * \brief  秒単位でカウントダウンする(数字)
+ * \brief  カウントダウンする(数字描画)
  * \author momoka
  * \date   2021 6/16
  * \details SetStartを呼び出す
@@ -9,41 +9,36 @@
 #include "UINumber.h"
 #include <memory>
 #include "UI2DBase.h"
+#include "../../../../AppFrame/source/static/Timer.h"
 
 class UITime {
 public:
     UITime();
     virtual ~UITime();
 
-    bool Init(int maxNum ,int digit);
+    bool Init();
     void Process();
     void Draw();
-    void SetStart(int startNum);
+    void SetStart(int minutes, int seconds);
 
     void SetStop(bool stop) {
         _isStop = stop;
     }
 
-    int GetNowTime() {
-        return _nowNum;
-    }
-
     bool GetEndNow() {
-        return _isEndNow;
+        return _isTimeEnd;
     }
 
 private:
-    std::unique_ptr<UINumber> _pUINumber;
- 
+    std::unique_ptr<Timer> _pTimer;
+    std::unique_ptr<UINumber> _pUIMinutes;
+    std::unique_ptr<UI2DBase> _pCenter;
+    std::unique_ptr<UINumber> _pUISeconds;
+
     int _maxNum;
 
-    int _startTime;
-    int _startNum;
-    int _nowNum;
-
-    bool _isStart;
     bool _isStop;
     bool _isEnd;
 
-    bool _isEndNow;  //全フレームがスタートで今エンドの時true;
+    bool _isTimeEnd;  //全フレームがスタートで今エンドの時true;
 };
