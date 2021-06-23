@@ -14,6 +14,7 @@
 #include "UI/UIHpGauge.h"
 #include "UI/UITime.h"
 #include "UI/UIItem.h"
+#include "momoka/Item.h"
 
 class ModeGame : public ModeBase{
 public:
@@ -31,6 +32,7 @@ private:
 	std::unique_ptr<UIHpGauge> _pHp;
 	std::unique_ptr<UITime> _pUITime;
 	std::unique_ptr<UIItem> _pUIItem;
+	std::unique_ptr<Item> _pItem;
 
 	bool _isBGM;
 	bool _isAnimEnd;

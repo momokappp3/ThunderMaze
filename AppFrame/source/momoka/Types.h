@@ -24,3 +24,11 @@ struct PopString {
 	Point xy;
 	bool isDraw;
 };
+
+//DrawInfo‚ÌŠi”[‡‚É•R‚Ã‚¯‚Ä‚¢‚é
+enum class ITEM {
+	Barrier = 4,
+	Portion,
+	Through,
+	None = 0
+};

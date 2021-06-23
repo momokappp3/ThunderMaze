@@ -12,6 +12,8 @@ ModeGame::ModeGame() {
 	_pUIPopUp = nullptr;
 	_pUITime = nullptr;
 	_pUIItem = nullptr;
+	_pItem = nullptr;
+	_pKeyInput = nullptr;
 
 	_isBGM = false;
 	_isAnimEnd = false;
@@ -47,10 +49,11 @@ bool ModeGame::Initialize() {
 	_pUIPopUp.reset(new UIPopUp);
 	_pHp.reset(new UIHpGauge);
 	_pUITime.reset(new UITime);
+	_pItem.reset(new Item);
 	_pUIItem.reset(new UIItem);
 
-	if(!_pMazeStage->Initialize() || !_pUIPopUp->Init() || !_pHp->Init() || !_pUITime->Init() ||
-	   !_pUIItem->Init()) {
+	if(!_pMazeStage->Initialize() || !_pUIPopUp->Init() || !_pHp->Init() || !_pUITime->Init()||
+	   !_pItem->Init()|| !_pUIItem->Init()) {
 		return false;
 	}
 
@@ -69,6 +72,26 @@ bool ModeGame::Process() {
 			_pUITime->SetStart(3,20);
 		}
 	}
+
+	//=======================================================
+	//test
+
+	if (_pKeyInput->_key[(KEY_INPUT_R)] == 1) {
+		_pItem->SetItem(ITEM::Barrier);
+	}
+
+	if (_pKeyInput->_key[(KEY_INPUT_T)] == 1) {
+		_pItem->SetItem(ITEM::Portion);
+	}
+
+	if (_pKeyInput->_key[(KEY_INPUT_Y)] == 1) {
+		_pItem->SetItem(ITEM::Through);
+	}
+
+
+	_pUIItem->SetUpperItem(_pItem->GetUpperItem());
+	_pUIItem->SetMiddleItem(_pItem->GetMiddleItem());
+	_pUIItem->SetDownItem(_pItem->GetDownItem());
 
 	_pMazeStage->GetModeCount(GetModeCount());
 
@@ -91,7 +114,6 @@ bool ModeGame::Process() {
 		ModeServer::GetInstance()->Del(this);
 		ModeServer::GetInstance()->Add(new ModeTitle(), 1, "title");
 	}
-
 
 	 //=================================================
 	 //DoorのPopUp表示クリアに行く処理
@@ -119,6 +141,7 @@ bool ModeGame::Process() {
 	 _pKeyInput->Process();
 	 ModeBase::Process();
 	 _pMazeStage->Process();
+	 _pItem->Process();
 
 	return true;
 }
@@ -128,6 +151,7 @@ bool ModeGame::Render() {
 	_pMazeStage->Render();
 	_pUIPopUp->Draw();
 	_pUITime->Draw();
+	_pItem->Draw();
 ;
 	if (_pMazeStage->GetIs3D()) {
 		_pHp->Draw();

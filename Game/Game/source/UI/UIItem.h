@@ -3,9 +3,11 @@
  * \brief  アイテムを扱うクラス
  * \author momoka
  * \date   2021 6/17
+ * \details
  *********************************************************************/
 #pragma once
 #include "UI2DBase.h"
+#include "../momoka/Item.h"
 
 class UIItem : public UI2DBase{
 public:
@@ -16,15 +18,21 @@ public:
     void Process();
     void Draw();
 
+    void SetUpperItem(ITEM item) {
+        _upperItem = static_cast<int>(item);
+    }
+
+    void SetMiddleItem(ITEM item) {
+        _middleItem = static_cast<int>(item);
+    }
+
+    void SetDownItem(ITEM item) {
+        _downItem = static_cast<int>(item);
+    }
+
 private:
 
-    //ハンドルに紐づけられる
-    enum class ITEM{
-        Barrier = 4,
-        Portion,
-        Through
-    };
-
-
-
+    int _upperItem;
+    int _middleItem;
+    int _downItem;
 };

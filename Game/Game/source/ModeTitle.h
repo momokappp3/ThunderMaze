@@ -9,6 +9,7 @@
 #include <memory>
 #include"../../../AppFrame/source/momoka/Input.h"
 #include "UI/UI2DSelectBase.h"
+#include "momoka/Item.h"
 
 class ModeTitle : public ModeBase{
 public:
@@ -30,6 +31,7 @@ protected:
 	std::unique_ptr<Input> _pKeyInput;
 	std::unique_ptr<UI2DSelectBase> _pNewGameString;
 	std::unique_ptr<UI2DSelectBase> _pExitString;
+	std::unique_ptr<Item> _pItem;
 
 	SelectMenu _nowMenuSelect;
 

@@ -10,7 +10,7 @@ ModeTitle::ModeTitle() {
 
 	_pNewGameString = nullptr;
 	_pExitString = nullptr;
-
+	_pItem = nullptr;
 	_isBgm = false;
 
 	_nowMenuSelect = SelectMenu::NewGame;
@@ -39,6 +39,9 @@ bool ModeTitle::Initialize() {
 	_pKeyInput.reset(new Input);
 	_pNewGameString.reset(new UI2DSelectBase);
 	_pExitString.reset(new UI2DSelectBase);
+
+	_pItem.reset(new Item);
+	_pItem->Init();
 
 	//newGameString
 	int handle = ResourceServer::LoadGraph("png/title/newgame.png");
@@ -86,6 +89,7 @@ bool ModeTitle::Initialize() {
 bool ModeTitle::Process() {
 
 	ModeBase::Process();
+	_pItem->Process();
 
 	if (!_isBgm) {
 		if (_pSoundManager != nullptr) {  //null
@@ -149,6 +153,7 @@ bool ModeTitle::Render() {
 	_pNewGameString->Draw();
 	_pExitString->Draw();
 	MouseInput::Draw();
+	_pItem->Draw();
 
 	return true;
 }

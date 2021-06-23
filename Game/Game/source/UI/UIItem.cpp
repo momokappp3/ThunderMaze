@@ -3,7 +3,9 @@
 #include "Dxlib.h"
 
 UIItem::UIItem() {
-
+	_upperItem = 0;
+	_middleItem = 0;
+	_downItem = 0;
 }
 
 UIItem::~UIItem() {
@@ -82,9 +84,15 @@ void UIItem::Draw(){
 	}
 	
 	//item‚Ì•`‰æ
-
-
-
+	if (_upperItem != 0) {
+		DrawGraph(_vDrawInfo[0].xy.x, _vDrawInfo[0].xy.y, _vDrawInfo[_upperItem].handle, TRUE);
+	}
+	if (_middleItem != 1) {
+		DrawGraph(_vDrawInfo[1].xy.x, _vDrawInfo[1].xy.y, _vDrawInfo[_middleItem].handle, TRUE);
+	}
+	if (_downItem != 2) {
+		DrawGraph(_vDrawInfo[2].xy.x, _vDrawInfo[2].xy.y, _vDrawInfo[_downItem].handle, TRUE);
+	}
 
 	//˜g
 	DrawGraph(_vDrawInfo[3].xy.x, _vDrawInfo[3].xy.y, _vDrawInfo[3].handle, TRUE);
