@@ -75,12 +75,15 @@ bool MazeStage::Initialize() {
 	maze[gly * MAZE_W + glx] = 0;	// 穴を開ける
 
 	//ゴールにドアモデルを設置
-	_pDoor.reset(new Model);
+	_pDoor.reset(new ModelAnimation);
 	_pDoor->Load("model/doorAnime.mv1");
 
 	if (_pDoor->GetHandle() == -1) {
 		return false;
 	}
+
+	_pDoor->AnimationPushBack(0,1,0.0f,3.0f);
+	_pDoor->AnimationPushBack(0, 2, 0.0f, 3.0f);
 
 	//穴を空けた場所の座標を3D座標に変換
 	_pDoor->GetTransform().SetPosition({ BLOCK_SIZE * glx, 0.0f, BLOCK_SIZE * -gly });
@@ -182,8 +185,6 @@ void MazeStage::StageInit() {
 
 bool MazeStage::Process() {
 
-	//int key = ApplicationMain::GetInstance()->GetKey();
-	//int trg = ApplicationMain::GetInstance()->GetTrg();
 	int nModeCnt = _modeCount;  //ゲームクラスから取ってくる
 	int f = 0;	// ルート更新時1にする
 
@@ -347,7 +348,7 @@ bool MazeStage::Process() {
 
 bool MazeStage::Render() {
 
-	GameDraw();
+	GameDraw();  //door true
 
 	return true;
 }
@@ -447,6 +448,7 @@ int MazeStage::MakeShortRoute(int x1, int y1, int x2, int y2, int cntmax) {
 }
 
 void MazeStage::GameDraw() {
+
 	int x, y;
 
 	// 画面クリア
@@ -607,7 +609,8 @@ void MazeStage::GameDraw() {
 
 					//doorAnime当たり判定
 					if (HitCheck_Line_Triangle(_player3DPosi, endPlayerPosi, vertex1, vertex2, vertex3Anime).HitFlag) {
-						_isDoorAnim = true;
+						//_isDoorAnim = true;
+						_pDoor->PlayAnimation(0);
 					}
 
 					//================
@@ -657,7 +660,7 @@ void MazeStage::GameDraw() {
 		DrawEffekseer3D();
 		_effectTime++;
 
-		_pDoor->Render();
+		_pDoor->Draw();
 	}
 	
 	// 描画速度表示

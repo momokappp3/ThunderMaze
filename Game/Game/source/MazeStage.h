@@ -10,6 +10,7 @@
 #include "../../../AppFrame/source/momoka/Model.h"
 #include <memory>
 #include "../../../AppFrame/source/momoka/Input.h"
+#include "../../../AppFrame/source/momoka/ModelAnimation.h"
 
 class MazeStage{
 public:
@@ -53,7 +54,7 @@ private:
 	int CheckChipRoute(int x1, int y1, int x2, int y2, int cntmax);
 	int MakeShortRoute(int x1, int y1, int x2, int y2, int cntmax);
 
-	std::unique_ptr<Model> _pDoor;
+	std::unique_ptr<ModelAnimation> _pDoor;
 	std::unique_ptr<Input> _pKeyInput;
 
 	static const int CHIP_W = 16;

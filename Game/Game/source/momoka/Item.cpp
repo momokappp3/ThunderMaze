@@ -13,16 +13,7 @@ Item::~Item() {
 
 bool Item::Init() {
 
-    _pInput.reset(new Input);  //—Ž‚¿‚é
-
-    //—á
-    /*
-    _vItem.push_back(ITEM::Barrier);
-    _vItem.push_back(ITEM::Portion);
-    _vItem.push_back(ITEM::Through);
-    _vItem.push_back(ITEM::Barrier);
-    _vItem.push_back(ITEM::Through);
-    */
+    _pInput.reset(new Input);
 
     return true;
 }

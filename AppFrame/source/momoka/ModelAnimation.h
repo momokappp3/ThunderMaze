@@ -9,23 +9,30 @@
 #pragma once
 #include "Model.h"
 #include <vector>
+#include <array>
 
 class ModelAnimation : public Model{
 public:
+    static constexpr int AnimSetMax = 3;
     ModelAnimation();
     virtual ~ModelAnimation();
 
     struct ANIM_INFO {
 
         int animHandle;
-        int playTime;
+        float playTime;
         float animSpead;
     };
 
     void Process();
     void Draw();
 
-    bool AnimationPushBack(int num, int anim,int playTime,int animSpead) {
+    //Init
+    bool AnimationPushBack(int num, int anim,float playTime,float animSpead) {
+
+        if (num >= AnimSetMax) {
+            return false;
+        }
 
         int handle = MV1AttachAnim(_handle, anim, -1, FALSE);
 
@@ -34,21 +41,19 @@ public:
         }
 
         ANIM_INFO info = { handle,playTime,animSpead };
-
-        _vAnimation[num].push_back(info);
+        _vAnimation[num].emplace_back(info);
 
         return true;
     }
 
-    void PlayAnimation(int num, int element) {
+    //アニメーションさせたいとき
+    void PlayAnimation(int num) {
 
-        for (int i = 0; i < _vAnimation.at(element).size(); i++) {
-            MV1SetAttachAnimTime(_handle, i, _vAnimation[num][element].playTime);
-        }
+        _vIsAnim[num] = true;
     }
 
 private:
         
     std::vector<std::vector<ANIM_INFO>> _vAnimation;  //1回で再生するアニメーション情報
-
+    std::array<bool, AnimSetMax> _vIsAnim;
 };
