@@ -68,12 +68,25 @@ bool MazeStage::Initialize() {
 	}
 
 	_pKeyInput.reset(new Input);
+	
+	//==============================================
+	//宝箱
+	_pStrongBox.reset(new ModelAnimation);
+	_pStrongBox->Load("model/boxAnime.mv1");
 
-	// ゴール位置を、下端から選択
-	glx = ((rand() % (MAZE_W - 1) / 2)) * 2 + 1;
-	gly = MAZE_H - 1;
-	maze[gly * MAZE_W + glx] = 0;	// 穴を開ける
+	if (_pStrongBox->GetHandle() == -1) {
+		return false;
+	}
 
+	_pStrongBox->AnimationPushBack(0, 1, 0.0f, 3.0f);
+	_pStrongBox->AnimationPushBack(0, 2, 0.0f, 3.0f);
+
+	//設置する場所
+	//(プレイヤーの二個隣)  (行き止まりに設置する)
+	_pStrongBox->GetTransform().SetPosition({ BLOCK_SIZE * plx +180, 0.0f, BLOCK_SIZE * -ply });
+	_pStrongBox->GetTransform().SetScale({ 0.1f, 0.1f, 0.1f });
+
+	//==============================================
 	//ゴールにドアモデルを設置
 	_pDoor.reset(new ModelAnimation);
 	_pDoor->Load("model/doorAnime.mv1");
@@ -85,11 +98,14 @@ bool MazeStage::Initialize() {
 	_pDoor->AnimationPushBack(0,1,0.0f,3.0f);
 	_pDoor->AnimationPushBack(0, 2, 0.0f, 3.0f);
 
+	// ゴール位置を、下端から選択
+	glx = ((rand() % (MAZE_W - 1) / 2)) * 2 + 1;
+	gly = MAZE_H - 1;
+	maze[gly * MAZE_W + glx] = 0;	// 穴を開ける
+
 	//穴を空けた場所の座標を3D座標に変換
 	_pDoor->GetTransform().SetPosition({ BLOCK_SIZE * glx, 0.0f, BLOCK_SIZE * -gly });
 	_pDoor->GetTransform().SetScale({ 0.9f, 0.65f, 0.0f });
-
-	SetUseLighting(FALSE);
 
 	//==========================
 	//エフェクト
@@ -105,6 +121,8 @@ bool MazeStage::Initialize() {
 	}
 
 	//エフェクトの座標一旦保留
+
+	SetUseLighting(FALSE);
 
 	return true;
 }
@@ -342,6 +360,7 @@ bool MazeStage::Process() {
 
 	_pKeyInput->Process();
 	_pDoor->Process();
+	_pStrongBox->Process();
 
 	return true;
 }
@@ -661,6 +680,7 @@ void MazeStage::GameDraw() {
 		_effectTime++;
 
 		_pDoor->Draw();
+		_pStrongBox->Draw();
 	}
 	
 	// 描画速度表示

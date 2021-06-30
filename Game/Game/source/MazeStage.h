@@ -55,6 +55,7 @@ private:
 	int MakeShortRoute(int x1, int y1, int x2, int y2, int cntmax);
 
 	std::unique_ptr<ModelAnimation> _pDoor;
+	std::unique_ptr<ModelAnimation> _pStrongBox;
 	std::unique_ptr<Input> _pKeyInput;
 
 	static const int CHIP_W = 16;
@@ -116,6 +117,8 @@ private:
 	bool _is3D;
 	bool _isDoorArea;
 	bool _isDoorAnim;
+	bool _isBoxArea;
+	bool _isBoxAnimation;
 	bool _isHit;
 
 	//===========
