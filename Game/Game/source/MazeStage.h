@@ -9,8 +9,10 @@
 #include "Dxlib.h"
 #include "../../../AppFrame/source/momoka/Model.h"
 #include <memory>
+#include <tuple>
 #include "../../../AppFrame/source/momoka/Input.h"
 #include "../../../AppFrame/source/momoka/ModelAnimation.h"
+#include "momoka/StrongBox.h"
 
 class MazeStage{
 public:
@@ -55,7 +57,7 @@ private:
 	int MakeShortRoute(int x1, int y1, int x2, int y2, int cntmax);
 
 	std::unique_ptr<ModelAnimation> _pDoor;
-	std::unique_ptr<ModelAnimation> _pStrongBox;
+	std::unique_ptr<StrongBox> _pStrongBox;
 	std::unique_ptr<Input> _pKeyInput;
 
 	static const int CHIP_W = 16;

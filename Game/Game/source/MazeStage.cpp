@@ -27,6 +27,8 @@ MazeStage::MazeStage() {
 	_is3D = false;
 	_isDoorArea = false;
 	_isDoorAnim = false;
+	_isBoxArea = false;
+	_isBoxAnimation = false;
 	_isHit = false;
 
 	_effectLoadHandle = -1;
@@ -70,21 +72,10 @@ bool MazeStage::Initialize() {
 	_pKeyInput.reset(new Input);
 	
 	//==============================================
-	//宝箱
-	_pStrongBox.reset(new ModelAnimation);
-	_pStrongBox->Load("model/boxAnime.mv1");
-
-	if (_pStrongBox->GetHandle() == -1) {
-		return false;
-	}
-
-	_pStrongBox->AnimationPushBack(0, 1, 0.0f, 3.0f);
-	_pStrongBox->AnimationPushBack(0, 2, 0.0f, 3.0f);
-
-	//設置する場所
+	//宝箱 設置する場所
 	//(プレイヤーの二個隣)  (行き止まりに設置する)
-	_pStrongBox->GetTransform().SetPosition({ BLOCK_SIZE * plx +180, 0.0f, BLOCK_SIZE * -ply });
-	_pStrongBox->GetTransform().SetScale({ 0.1f, 0.1f, 0.1f });
+	_pStrongBox.reset(new StrongBox);
+	_pStrongBox->Init({ BLOCK_SIZE * plx + 180, 0.0f, BLOCK_SIZE * -ply });
 
 	//==============================================
 	//ゴールにドアモデルを設置
@@ -619,19 +610,13 @@ void MazeStage::GameDraw() {
 					VECTOR vertex3Anime = { goal.x,goal.y,goal.z + 60.0f };
 
 					//door三角形と線分の当たり判定
-					if (HitCheck_Line_Triangle(_player3DPosi, endPlayerPosi, vertex1, vertex2, vertex3).HitFlag) {
-						_isDoorArea = true;
-					}
-					else {
-						_isDoorArea = false;
-					}
+					_isDoorArea = HitCheck_Line_Triangle(_player3DPosi, endPlayerPosi, vertex1, vertex2, vertex3).HitFlag == 1;
 
 					//doorAnime当たり判定
 					if (HitCheck_Line_Triangle(_player3DPosi, endPlayerPosi, vertex1, vertex2, vertex3Anime).HitFlag) {
-						//_isDoorAnim = true;
 						_pDoor->PlayAnimation(0);
 					}
-
+					_pStrongBox->SetPlayerPosition(_player3DPosi, endPlayerPosi);
 					//================
 					//雷とプレイヤーの当たり判定
 
