@@ -44,11 +44,7 @@ public:
 	};
 
 	enum class InGame {
-		CardSelect = 0,
-		CutInVerticalStart,
-		CutInVerticalEnd,
-		CutInHorizontalStart,
-		CutInHorizontalEnd,
+		BoxOpen = 0,
 
 		Max
 	};

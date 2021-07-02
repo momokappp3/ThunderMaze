@@ -46,8 +46,8 @@ bool ModeGame::Initialize() {
 	_pItem.reset(new Item);
 	_pUIItem.reset(new UIItem);
 
-	if(!_pMazeStage->Initialize() || !_pUIPopUp->Init() || !_pHp->Init() || !_pUITime->Init()||
-	   !_pItem->Init()|| !_pUIItem->Init()) {
+	if(!_pMazeStage->Initialize(_pSoundManager) || !_pUIPopUp->Init() || !_pHp->Init() || !_pUITime->Init()||
+	   !_pItem->Init(_pSoundManager)|| !_pUIItem->Init()) {
 		return false;
 	}
 
@@ -82,7 +82,6 @@ bool ModeGame::Process() {
 		_pItem->SetItem(ITEM::Through);
 	}
 	
-
 	_pUIItem->SetUpperItem(_pItem->GetUpperItem());
 	_pUIItem->SetMiddleItem(_pItem->GetMiddleItem());
 	_pUIItem->SetDownItem(_pItem->GetDownItem());
@@ -117,6 +116,38 @@ bool ModeGame::Process() {
 	 }
 	 else {
 		 _pUIPopUp->SetNowMode(false);
+	 }
+
+	 //=======================================================
+	 //宝箱のポップアップ&アイテム
+
+	 if (_pMazeStage->GetBox()->GetIsPopUp()) {
+		 _pUIPopUp->SetNowMode(true);
+		 if (_pMazeStage->GetBox()->GetIsItem()) {
+
+			 switch (_pMazeStage->GetBox()->GetItemNum()){
+			 case ITEM::Barrier:
+				 _pUIPopUp->SetPopString({ "バリア" ,573,403,true });
+				 break;
+			 case ITEM::Portion:
+				 _pUIPopUp->SetPopString({ "回復薬" ,573,403,true });
+				 break;
+			 case ITEM::Through :
+				 _pUIPopUp->SetPopString({ "すり抜け" ,573,403,true });
+				 break;
+			 default:
+				 break;
+			 }
+
+			 if (_pKeyInput->_key[(KEY_INPUT_RETURN)] == 1) {
+				 _pMazeStage->GetBox()->SetIsItem(false);
+				 _pItem->SetItem(_pMazeStage->GetBox()->GetItemNum());
+				 _pSoundManager->PlaySECommon(SoundManager::SECommon::OK);
+			 }
+		 }
+		 else {
+			 _pUIPopUp->SetPopString({ "何も入っていない" ,573,403,true });
+		 }
 	 }
 
 	 _pUITime->Process();

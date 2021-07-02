@@ -36,6 +36,8 @@ MazeStage::MazeStage() {
 	_effectPlayHandle2 = -1;
 
 	_effectTime = 0;
+
+	_pSoundManeger = nullptr;
 }
 
 MazeStage::~MazeStage() {
@@ -47,7 +49,13 @@ MazeStage::~MazeStage() {
 	Effkseer_End();
 }
 
-bool MazeStage::Initialize() {
+bool MazeStage::Initialize(std::shared_ptr<SoundManager> sound) {
+
+	_pSoundManeger = sound;
+
+	if (_pSoundManeger == nullptr) {
+		return false;
+	}
 
 	cg[ECG_CHIP_BLACK] = ResourceServer::LoadGraph("png/stage/chip_black.png");
 	cg[ECG_CHIP_WHITE] = ResourceServer::LoadGraph("png/stage/chip_white.png");
@@ -75,7 +83,7 @@ bool MazeStage::Initialize() {
 	//宝箱 設置する場所
 	//(プレイヤーの二個隣)  (行き止まりに設置する)
 	_pStrongBox.reset(new StrongBox);
-	_pStrongBox->Init({ BLOCK_SIZE * plx + 180, 0.0f, BLOCK_SIZE * -ply });
+	_pStrongBox->Init(_pSoundManeger,{ BLOCK_SIZE * plx + 180, 0.0f, BLOCK_SIZE * -ply });
 
 	//==============================================
 	//ゴールにドアモデルを設置

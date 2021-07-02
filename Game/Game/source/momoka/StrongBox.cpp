@@ -3,6 +3,7 @@
 
 StrongBox::StrongBox() {
     _pStrongBox = nullptr;
+	_pSoundManager = nullptr;
 
 	_point = { 0,0,0 };
 
@@ -24,7 +25,23 @@ StrongBox::StrongBox() {
 StrongBox::~StrongBox() {
 }
 
-bool StrongBox::Init(VECTOR point) {
+bool StrongBox::Init(std::shared_ptr<SoundManager>sound,VECTOR point) {
+
+	_pSoundManager = sound;
+
+	if (_pSoundManager == nullptr) {
+		return false;
+	}
+	if (_pSoundManager != nullptr) {
+		bool seTitle = _pSoundManager->LoadSEInGame();
+
+		if (!seTitle) {
+			return false;
+		}
+	}
+	else {
+		return false;
+	}
 
     //置く場所をもらう
     _point = point;
@@ -44,10 +61,10 @@ bool StrongBox::Init(VECTOR point) {
 	_pStrongBox->GetTransform().SetPosition(_point);
 	_pStrongBox->GetTransform().SetScale({ 0.1f, 0.1f, 0.1f });
 
-	_vertex1 = { _point.x - 40.0f,_point.y,_point.z };
-	_vertex2 = { _point.x + 40.0f,_point.y,_point.z };
-	_vertex3 = { _point.x,_point.y,_point.z + 40.0f };
-	_vertex3Anime = { _point.x,_point.y,_point.z + 60.0f };
+	_vertex1 = { _point.x - 20.0f,_point.y,_point.z };
+	_vertex2 = { _point.x + 20.0f,_point.y,_point.z };
+	_vertex3 = { _point.x,_point.y,_point.z - 100.0f };
+	_vertex3Anime = { _point.x,_point.y,_point.z - 50.0f };
 
 	//=============================================
 	//ランダムでアイテムを何にするか決める
@@ -65,6 +82,7 @@ void StrongBox::Process() {
 	//Anime当たり判定
 	if (!_isAnim && HitCheck_Line_Triangle(_player3DPosi, _endPlayerPosi, _vertex1, _vertex2, _vertex3Anime).HitFlag) {
 		_pStrongBox->PlayAnimation(0);
+		_pSoundManager->PlaySEInGame(SoundManager::InGame::BoxOpen);
 		_isAnim = true;
 	}
 

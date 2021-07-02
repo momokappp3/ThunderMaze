@@ -13,7 +13,7 @@ public:
     StrongBox();
     virtual ~StrongBox();
 
-    bool Init(VECTOR point);
+    bool Init(std::shared_ptr<SoundManager> sound,VECTOR point);
     void Process();
     void Draw();
 
@@ -26,12 +26,21 @@ public:
         return _isPopUp;
     }
 
-    int GetItemNum() {
-        return _itemNum;
+    bool GetIsItem() {
+        return _isItem;
+    }
+
+    void SetIsItem(bool item) {
+        _isItem = item;
+    }
+
+    ITEM GetItemNum() {
+        return static_cast<ITEM>(_itemNum);
     }
 
 private:
     std::unique_ptr<ModelAnimation> _pStrongBox;
+    std::shared_ptr<SoundManager> _pSoundManager;
     VECTOR _point;
 
     VECTOR _player3DPosi;

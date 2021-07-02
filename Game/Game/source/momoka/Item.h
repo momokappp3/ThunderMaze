@@ -9,6 +9,7 @@
 #include "../../../../AppFrame/source/momoka/Input.h"
 #include <memory>
 #include "../../../../AppFrame/source/momoka/Types.h"
+#include "../../../../AppFrame/source/momoka/SoundManager.h"
 
 //上方向に動いたか　下方向に動いたか
 class Item{
@@ -16,7 +17,7 @@ public:
     Item();
     virtual ~Item();
 
-    bool Init();
+    bool Init(std::shared_ptr<SoundManager> sound);
     void Process();
     void Draw();  //debug用
 
@@ -63,6 +64,7 @@ public:
 
 private:
     std::unique_ptr<Input> _pInput;
+    std::shared_ptr<SoundManager> _pSoundManager;
 
     std::vector<ITEM> _vItem;  //現在入っているアイテム
 

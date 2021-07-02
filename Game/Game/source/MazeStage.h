@@ -18,7 +18,7 @@ class MazeStage{
 public:
 	MazeStage();
 	virtual ~MazeStage();
-	virtual bool Initialize();
+	virtual bool Initialize(std::shared_ptr<SoundManager> sound);
 	virtual bool Terminate();
 	virtual bool Process();
 	virtual bool Render();
@@ -49,6 +49,10 @@ public:
 		return _pDoor->GetHandle();
 	}
 
+	std::unique_ptr<StrongBox>& GetBox() {
+		return _pStrongBox;
+	}
+
 private:
 	void GameDraw();
 	void StageInit();
@@ -59,6 +63,7 @@ private:
 	std::unique_ptr<ModelAnimation> _pDoor;
 	std::unique_ptr<StrongBox> _pStrongBox;
 	std::unique_ptr<Input> _pKeyInput;
+	std::shared_ptr<SoundManager> _pSoundManeger;
 
 	static const int CHIP_W = 16;
 	static const int CHIP_H = 16;

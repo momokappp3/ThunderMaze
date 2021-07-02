@@ -41,7 +41,7 @@ bool ModeTitle::Initialize() {
 	_pExitString.reset(new UI2DSelectBase);
 
 	_pItem.reset(new Item);
-	_pItem->Init();
+	//_pItem->Init();
 
 	//newGameString
 	int handle = ResourceServer::LoadGraph("png/title/newgame.png");

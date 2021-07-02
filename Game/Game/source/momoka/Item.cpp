@@ -1,19 +1,32 @@
 #include "Item.h"
 #include "Dxlib.h"
 
+
 Item::Item() {
 
     _vItem.clear();
     _itemSelect = 0;
     _pInput = nullptr;
+    _pSoundManager = nullptr;
 }
 
 Item::~Item() {
 }
 
-bool Item::Init() {
+bool Item::Init(std::shared_ptr<SoundManager> sound) {
+
+    _pSoundManager = sound;
+
+    if (_pSoundManager == nullptr) {
+        return false;
+    }
 
     _pInput.reset(new Input);
+
+    auto onSelect = [this]() {
+        //サウンド鳴らす
+        _pSoundManager->PlaySECommon(SoundManager::SECommon::Select);
+    };
 
     return true;
 }
@@ -25,12 +38,13 @@ void Item::Process(){
 
         if (_vItem.size() > 1) {
             if (_pInput->_key[(KEY_INPUT_Z)] == 1) {
-
                 _itemSelect = (_itemSelect + 1) % _vItem.size(); //(ループする)
+                _pSoundManager->PlaySECommon(SoundManager::SECommon::Select);
             }
 
             if (_pInput->_key[(KEY_INPUT_C)] == 1) {
                 _itemSelect = (_itemSelect + (_vItem.size() - 1)) % _vItem.size();
+                _pSoundManager->PlaySECommon(SoundManager::SECommon::Select);
             }
         }
     }
