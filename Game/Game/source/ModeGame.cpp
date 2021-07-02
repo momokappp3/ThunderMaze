@@ -16,12 +16,6 @@ ModeGame::ModeGame() {
 	_pKeyInput = nullptr;
 
 	_isBGM = false;
-	_isAnimEnd = false;
-
-	_playTime = 0.0f;
-
-	_attachDoorIndexRight = -1;
-	_attachDoorIndexLeft = -1;
 }
 
 ModeGame::~ModeGame() {
@@ -75,7 +69,7 @@ bool ModeGame::Process() {
 
 	//=======================================================
 	//test
-
+	
 	if (_pKeyInput->_key[(KEY_INPUT_R)] == 1) {
 		_pItem->SetItem(ITEM::Barrier);
 	}
@@ -87,23 +81,13 @@ bool ModeGame::Process() {
 	if (_pKeyInput->_key[(KEY_INPUT_Y)] == 1) {
 		_pItem->SetItem(ITEM::Through);
 	}
-
+	
 
 	_pUIItem->SetUpperItem(_pItem->GetUpperItem());
 	_pUIItem->SetMiddleItem(_pItem->GetMiddleItem());
 	_pUIItem->SetDownItem(_pItem->GetDownItem());
 
 	_pMazeStage->GetModeCount(GetModeCount());
-	/*
-	//ドアのアニメーション 0が右 3が左
-	if (_pMazeStage->GetIsDoorAnim()) {
-		if (!_isAnimEnd) {
-			_playTime += 0.1f;
-			_attachDoorIndexRight = MV1AttachAnim(_pMazeStage->GetDoorHandle(), 0, -1, FALSE);
-			_attachDoorIndexLeft = MV1AttachAnim(_pMazeStage->GetDoorHandle(), 3, -1, FALSE);
-		}
-	}
-	*/
 
 	//攻撃が当たったら
 	if (_pMazeStage->GetIsHit()) {
@@ -157,11 +141,6 @@ bool ModeGame::Render() {
 	if (_pMazeStage->GetIs3D()) {
 		_pHp->Draw();
 		_pUIItem->Draw();
-	}
-
-	if (_pMazeStage->GetIsDoorAnim()) {
-		//MV1SetAttachAnimTime(_pMazeStage->GetDoorHandle(), _attachDoorIndexRight, _playTime);
-		//MV1SetAttachAnimTime(_pMazeStage->GetDoorHandle(), _attachDoorIndexLeft, _playTime);
 	}
 
 	MouseInput::Draw();

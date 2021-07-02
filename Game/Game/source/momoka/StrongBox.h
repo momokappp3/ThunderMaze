@@ -6,6 +6,7 @@
  *********************************************************************/
 #pragma once
 #include "../../../../AppFrame/source/momoka/ModelAnimation.h"
+#include"Item.h"
 
 class StrongBox {
 public:
@@ -21,12 +22,17 @@ public:
         _endPlayerPosi = end;
     }
 
+    bool GetIsPopUp() {
+        return _isPopUp;
+    }
+
+    int GetItemNum() {
+        return _itemNum;
+    }
+
 private:
     std::unique_ptr<ModelAnimation> _pStrongBox;
     VECTOR _point;
-
-    bool _isPopUp;
-    bool _isAnim;
 
     VECTOR _player3DPosi;
     VECTOR _endPlayerPosi;
@@ -35,4 +41,10 @@ private:
     VECTOR _vertex2;
     VECTOR _vertex3;
     VECTOR _vertex3Anime;
+
+    bool _isPopUp;  //popUpエリアに入っているかいないか
+    bool _isAnim;  //アニメーションしたか
+    bool _isItem;  //アイテムを所持しているかしていないか
+
+    int _itemNum;  //アイテムType
 };

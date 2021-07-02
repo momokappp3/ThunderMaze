@@ -16,7 +16,6 @@
 #include "UI/UIItem.h"
 #include "momoka/Item.h"
 
-
 class ModeGame : public ModeBase{
 public:
 	ModeGame();
@@ -36,12 +35,6 @@ private:
 	std::unique_ptr<Item> _pItem;
 
 	bool _isBGM;
-	bool _isAnimEnd;
-
-	float _playTime;
-
-	int _attachDoorIndexRight;
-	int _attachDoorIndexLeft;
 
 	int _hpNum;
 }; 

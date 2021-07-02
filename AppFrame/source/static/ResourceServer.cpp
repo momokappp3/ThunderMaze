@@ -33,7 +33,6 @@ int ResourceServer::MV1LoadModel(const TCHAR* FileName,bool multiple) {
         auto itr = _mapGraph3D.find(FileName);  //引数のファイル名のキーの位置
 
         if (itr != _mapGraph3D.end()) {   //最終要素の次ではなかったら　　ここの説明
-
             // キーがあった
             return itr->second;   //second = ハンドル
         }

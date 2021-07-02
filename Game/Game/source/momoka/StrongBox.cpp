@@ -1,4 +1,5 @@
 #include "StrongBox.h"
+#include"../../../../AppFrame/source/static/MTRandom.h"
 
 StrongBox::StrongBox() {
     _pStrongBox = nullptr;
@@ -15,6 +16,9 @@ StrongBox::StrongBox() {
 
 	_isPopUp = false;
 	_isAnim = false;
+	_isItem = true;
+
+	_itemNum = -1;
 }
 
 StrongBox::~StrongBox() {
@@ -44,6 +48,11 @@ bool StrongBox::Init(VECTOR point) {
 	_vertex2 = { _point.x + 40.0f,_point.y,_point.z };
 	_vertex3 = { _point.x,_point.y,_point.z + 40.0f };
 	_vertex3Anime = { _point.x,_point.y,_point.z + 60.0f };
+
+	//=============================================
+	//ランダムでアイテムを何にするか決める
+	//保持(4～6)
+	_itemNum = MTRandom::Get(4, 6);
 
     return true;
 }
