@@ -53,17 +53,28 @@ public:
 		return _pStrongBox;
 	}
 
+	//行き止まりのタイプ
+	enum class NoPassageType {
+		UP = 0,
+		RIGHT,
+		DOWN,
+		LEFT,
+		MAX
+	};
+
 private:
 	void GameDraw();
 	void StageInit();
 	void _CheckChipRoute(int x1, int y1, int x2, int y2, int cntmax);
 	int CheckChipRoute(int x1, int y1, int x2, int y2, int cntmax);
 	int MakeShortRoute(int x1, int y1, int x2, int y2, int cntmax);
+	void SearchNoPassage();  //行き止まりと行き止まりのタイプを判定
 
 	std::unique_ptr<ModelAnimation> _pDoor;
 	std::unique_ptr<StrongBox> _pStrongBox;
 	std::unique_ptr<Input> _pKeyInput;
 	std::shared_ptr<SoundManager> _pSoundManeger;
+	std::vector<std::tuple<int, int, NoPassageType>> _noPassageList;  //行き止まりの座標とタイプ
 
 	static const int CHIP_W = 16;
 	static const int CHIP_H = 16;

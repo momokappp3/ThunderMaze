@@ -6,6 +6,7 @@ ModelAnimation::ModelAnimation() {
     //_vAnimation.at(0).size(); //â°ÇÃóvëfêî
 
     _vAnimation.clear();
+
     for (int i = 0; i < AnimSetMax; i++) {
 
         std::vector<ANIM_INFO> list = {};
@@ -20,8 +21,6 @@ ModelAnimation:: ~ModelAnimation() {
 }
 
 void ModelAnimation::Process() {
-
-
 
     Model::Process();
 }

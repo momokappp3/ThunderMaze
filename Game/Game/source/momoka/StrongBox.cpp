@@ -47,19 +47,20 @@ bool StrongBox::Init(std::shared_ptr<SoundManager>sound,VECTOR point) {
     _point = point;
 
 	_pStrongBox.reset(new ModelAnimation);
-	_pStrongBox->Load("model/boxAnime.mv1");
+	_pStrongBox->Load("model/boxAnime5.mv1");
 
 	if (_pStrongBox->GetHandle() == -1) {
 		return false;
 	}
 
-	_pStrongBox->AnimationPushBack(0, 1, 0.0f, 3.0f);
-	_pStrongBox->AnimationPushBack(0, 2, 0.0f, 3.0f);
+	_pStrongBox->AnimationPushBack(0, 0, 0.0f, 1.0f);
+	_pStrongBox->AnimationPushBack(0, 3, 0.0f, 1.0f);
 
 	//設置する場所
 	//(プレイヤーの二個隣)  (行き止まりに設置する)
 	_pStrongBox->GetTransform().SetPosition(_point);
 	_pStrongBox->GetTransform().SetScale({ 0.1f, 0.1f, 0.1f });
+	_pStrongBox->GetTransform().SetDirection({ 0.0f,0.0f,120.0f });
 
 	_vertex1 = { _point.x - 20.0f,_point.y,_point.z };
 	_vertex2 = { _point.x + 20.0f,_point.y,_point.z };

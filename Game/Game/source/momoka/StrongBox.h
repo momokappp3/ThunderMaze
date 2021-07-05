@@ -38,6 +38,10 @@ public:
         return static_cast<ITEM>(_itemNum);
     }
 
+    void SetSetDirection(int num) {
+       
+    }
+
 private:
     std::unique_ptr<ModelAnimation> _pStrongBox;
     std::shared_ptr<SoundManager> _pSoundManager;

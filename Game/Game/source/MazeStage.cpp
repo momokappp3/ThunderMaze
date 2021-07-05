@@ -66,7 +66,8 @@ bool MazeStage::Initialize(std::shared_ptr<SoundManager> sound) {
 	cg[ECG_STAR] = ResourceServer::LoadGraph("png/stage/star.png");
 	cg[ECG_HEART] = ResourceServer::LoadGraph("png/stage/heart.png");
 
-	StageInit();  	// ステージ初期化
+	StageInit();  	   // ステージ初期化
+	SearchNoPassage(); // 行き止まりを探す
 
 	// プレイヤー位置を、上端（のひとつ内側）から選択
 	while (1) {
@@ -84,6 +85,17 @@ bool MazeStage::Initialize(std::shared_ptr<SoundManager> sound) {
 	//(プレイヤーの二個隣)  (行き止まりに設置する)
 	_pStrongBox.reset(new StrongBox);
 	_pStrongBox->Init(_pSoundManeger,{ BLOCK_SIZE * plx + 180, 0.0f, BLOCK_SIZE * -ply });
+
+
+	/*
+	auto hoge = _noPassageList[0];
+
+	auto x = std::get<0>(hoge);
+	auto y = std::get<1>(hoge);
+	*/
+	//_pStrongBox->Init(_pSoundManeger, { BLOCK_SIZE * plx + 180, 0.0f, BLOCK_SIZE * -ply });
+
+
 
 	//==============================================
 	//ゴールにドアモデルを設置
@@ -195,6 +207,74 @@ void MazeStage::StageInit() {
 			y = (rand() % (MAZE_H / 2)) * 2 + 1;
 			if (maze[y * MAZE_W + x] == 0) {
 				break;
+			}
+		}
+	}
+}
+
+void MazeStage::SearchNoPassage() {
+	// 行き止まりを探す
+	auto yMax = MAZE_H - 2;
+	auto xMax = MAZE_W - 2;
+	constexpr auto checkNum = 9;
+	std::array<char, checkNum> check = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	constexpr auto typeMax = static_cast<int>(NoPassageType::MAX);
+	std::array<std::array<char, checkNum>, typeMax> checkType = {
+		std::array<char, checkNum>{
+			1, 0, 1,
+			1, 0, 1,
+			1, 1, 1
+		},
+		std::array<char, checkNum>{
+			1, 1, 1,
+			1, 0, 0,
+			1, 1, 1
+		},
+		std::array<char, checkNum>{
+			1, 1, 1,
+			1, 0, 1,
+			1, 0, 1
+		},
+		std::array<char, checkNum>{
+			1, 1, 1,
+			0, 0, 1,
+			1, 1, 1
+		}
+	};
+
+	for (auto y = 0; y < yMax; y++) {
+		for (auto x = 0; x < xMax; x++) {
+			check[0] = maze[y       * MAZE_W + x];
+			check[1] = maze[(y + 1) * MAZE_W + x + 1];
+			check[2] = maze[(y + 2) * MAZE_W + x + 2];
+
+			check[3] = maze[y       * MAZE_W + x];
+			check[4] = maze[(y + 1) * MAZE_W + x + 1];
+			check[5] = maze[(y + 2) * MAZE_W + x + 2];
+
+			check[6] = maze[y       * MAZE_W + x];
+			check[7] = maze[(y + 1) * MAZE_W + x + 1];
+			check[8] = maze[(y + 2) * MAZE_W + x + 2];
+
+			for (auto i = 0; i < typeMax; ++i) {
+				auto hit = true;
+
+				// 全てのチェックが OK なら行き止まり
+				for (auto j = 0; j < checkNum; ++j) {
+					if (check[j] != checkType[i][j]) {
+						//hit = false;
+						break;
+					}
+				}
+
+				if (hit) {  //一度もヒットしてない
+					// 行き止まりの位置とタイプ
+					auto noPassage = std::make_tuple(x + 1, y + 1, static_cast<NoPassageType>(i));
+
+					_noPassageList.emplace_back(noPassage);
+
+					break;
+				}
 			}
 		}
 	}
@@ -507,6 +587,20 @@ void MazeStage::GameDraw() {
 
 		DrawGraph(glx * CHIP_W, gly * CHIP_H, cg[ECG_HEART], TRUE);  // 2Dゴール
 		DrawGraph(plx * CHIP_W, ply * CHIP_H, cg[ECG_STAR], TRUE);	// 2Dプレイヤー
+
+
+		auto hoge = _noPassageList[0];
+
+		auto x = std::get<0>(hoge);
+		auto y = std::get<1>(hoge);
+
+		DrawGraph(x * CHIP_W, y * CHIP_H, cg[ECG_CHIP_BLUE], TRUE);
+
+		hoge = _noPassageList[1];
+		x = std::get<0>(hoge);
+		y = std::get<1>(hoge);
+
+		DrawGraph(x * CHIP_W, y * CHIP_H, cg[ECG_CHIP_BLUE], TRUE);
 
 		// 情報表示
 		DrawFormatString(0, 720 - 16, GetColor(255, 255, 255), "search_time: %d, search_call: %d", search_time_ms, search_call_cnt);

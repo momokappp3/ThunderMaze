@@ -36,7 +36,7 @@ public:
 
 private:
 
-	friend	ModeServer;
+	friend ModeServer;
 	// ModeServer—p
 	std::string		_szName;
 	int				_uid;
