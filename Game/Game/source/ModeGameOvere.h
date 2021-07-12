@@ -1,18 +1,17 @@
-/*****************************************************************
- * \file   ModeClear.h
- * \brief  Clear
+/*****************************************************************//**
+ * \file   ModeGameOvere.h
+ * \brief  GameOvereシーンクラス
  * \author momoka
- * \date   2021 6/2
+ * \date   2021 7/12
  *********************************************************************/
 #pragma once
 #include "../../../AppFrame/source/appframe.h"
-#include <memory>
 #include "../../../AppFrame/source/momoka/Input.h"
 
-class ModeClear : public ModeBase {
+class ModeGameOvere:public ModeBase {
 public:
-	ModeClear();
-	virtual ~ModeClear();
+	ModeGameOvere();
+	virtual ~ModeGameOvere();
 
 	virtual bool Initialize();
 	virtual bool Process();

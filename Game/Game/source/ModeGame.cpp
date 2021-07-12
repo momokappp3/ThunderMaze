@@ -146,7 +146,7 @@ bool ModeGame::Process() {
 			 }
 		 }
 		 else {
-			 _pUIPopUp->SetPopString({ "‰½‚à“ü‚Á‚Ä‚¢‚È‚¢" ,573,403,true });
+			 _pUIPopUp->SetPopString({ "‰½‚à“ü‚Á‚Ä‚¢‚È‚¢" ,553,403,true });
 		 }
 	 }
 

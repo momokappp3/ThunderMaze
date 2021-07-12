@@ -4,6 +4,7 @@
 ** ・主人公とゴールの設定、移動、穴あけ
 ** ・主人公から、移動できる歩数範囲をチェック
 ** ・ゴールから主人公の位置までの最短ルートを調べる
+** マウス処理追加
 */
 
 #include "MazeStage.h"
@@ -15,9 +16,9 @@
 #include "EffekseerForDXLib.h"
 
 // 3D用
-#define BLOCK_SIZE 80.0f			// ブロックのサイズ
-#define CAMERA_Y (BLOCK_SIZE/2.f)	// カメラの高さ
-#define	MOVE_BLOCK_SPEED 20.f		// 1ブロック移動するフレーム数
+const float BLOCK_SIZE = 80.0f;			// ブロックのサイズ
+const float CAMERA_Y = (BLOCK_SIZE / 2.0f);	// カメラの高さ
+const float	MOVE_BLOCK_SPEED = 20.0f;		// 1ブロック移動するフレーム数
 
 MazeStage::MazeStage() {
 
@@ -219,6 +220,7 @@ void MazeStage::SearchNoPassage() {
 	constexpr auto checkNum = 9;
 	std::array<char, checkNum> check = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	constexpr auto typeMax = static_cast<int>(NoPassageType::MAX);
+
 	std::array<std::array<char, checkNum>, typeMax> checkType = {
 		std::array<char, checkNum>{
 			1, 0, 1,
@@ -245,15 +247,15 @@ void MazeStage::SearchNoPassage() {
 	for (auto y = 0; y < yMax; y++) {
 		for (auto x = 0; x < xMax; x++) {
 			check[0] = maze[y       * MAZE_W + x];
-			check[1] = maze[(y + 1) * MAZE_W + x + 1];
-			check[2] = maze[(y + 2) * MAZE_W + x + 2];
+			check[1] = maze[y       * MAZE_W + x + 1];
+			check[2] = maze[y       * MAZE_W + x + 2];
 
-			check[3] = maze[y       * MAZE_W + x];
+			check[3] = maze[(y + 1) * MAZE_W + x];
 			check[4] = maze[(y + 1) * MAZE_W + x + 1];
-			check[5] = maze[(y + 2) * MAZE_W + x + 2];
+			check[5] = maze[(y + 1) * MAZE_W + x + 2];
 
-			check[6] = maze[y       * MAZE_W + x];
-			check[7] = maze[(y + 1) * MAZE_W + x + 1];
+			check[6] = maze[(y + 2) * MAZE_W + x];
+			check[7] = maze[(y + 2) * MAZE_W + x + 1];
 			check[8] = maze[(y + 2) * MAZE_W + x + 2];
 
 			for (auto i = 0; i < typeMax; ++i) {
@@ -262,7 +264,7 @@ void MazeStage::SearchNoPassage() {
 				// 全てのチェックが OK なら行き止まり
 				for (auto j = 0; j < checkNum; ++j) {
 					if (check[j] != checkType[i][j]) {
-						//hit = false;
+						hit = false;
 						break;
 					}
 				}
@@ -589,18 +591,15 @@ void MazeStage::GameDraw() {
 		DrawGraph(plx * CHIP_W, ply * CHIP_H, cg[ECG_STAR], TRUE);	// 2Dプレイヤー
 
 
-		auto hoge = _noPassageList[0];
+		for (int i = 0; i < _noPassageList.size(); i++) {
 
-		auto x = std::get<0>(hoge);
-		auto y = std::get<1>(hoge);
+			auto hoge = _noPassageList[i];
 
-		DrawGraph(x * CHIP_W, y * CHIP_H, cg[ECG_CHIP_BLUE], TRUE);
+			auto x = std::get<0>(hoge);
+			auto y = std::get<1>(hoge);
 
-		hoge = _noPassageList[1];
-		x = std::get<0>(hoge);
-		y = std::get<1>(hoge);
-
-		DrawGraph(x * CHIP_W, y * CHIP_H, cg[ECG_CHIP_BLUE], TRUE);
+			DrawGraph(x * CHIP_W, y * CHIP_H, cg[ECG_CHIP_BLUE], TRUE);
+		}
 
 		// 情報表示
 		DrawFormatString(0, 720 - 16, GetColor(255, 255, 255), "search_time: %d, search_call: %d", search_time_ms, search_call_cnt);

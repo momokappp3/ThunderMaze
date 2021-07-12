@@ -53,13 +53,13 @@ bool StrongBox::Init(std::shared_ptr<SoundManager>sound,VECTOR point) {
 		return false;
 	}
 
-	_pStrongBox->AnimationPushBack(0, 0, 0.0f, 1.0f);
-	_pStrongBox->AnimationPushBack(0, 3, 0.0f, 1.0f);
+	_pStrongBox->AnimationPushBack(0, 0, 0.0f, 0.8f);  //鍵
+	_pStrongBox->AnimationPushBack(0, 3, 0.0f, 0.9f);  //開く  
 
 	//設置する場所
 	//(プレイヤーの二個隣)  (行き止まりに設置する)
 	_pStrongBox->GetTransform().SetPosition(_point);
-	_pStrongBox->GetTransform().SetScale({ 0.1f, 0.1f, 0.1f });
+	_pStrongBox->GetTransform().SetScale({ 0.18f, 0.18f, 0.18f });
 	_pStrongBox->GetTransform().SetDirection({ 0.0f,0.0f,120.0f });
 
 	_vertex1 = { _point.x - 20.0f,_point.y,_point.z };
@@ -78,10 +78,10 @@ bool StrongBox::Init(std::shared_ptr<SoundManager>sound,VECTOR point) {
 void StrongBox::Process() {
 	
 	//宝箱三角形と線分の当たり判定
-	_isPopUp = HitCheck_Line_Triangle(_player3DPosi, _endPlayerPosi, _vertex1, _vertex2, _vertex3).HitFlag == 1;
+	_isPopUp = HitCheck_Line_Triangle(_player3DPosi, _endPlayerPosi, _vertex1, _vertex2, _vertex3Anime).HitFlag == 1;
 
 	//Anime当たり判定
-	if (!_isAnim && HitCheck_Line_Triangle(_player3DPosi, _endPlayerPosi, _vertex1, _vertex2, _vertex3Anime).HitFlag) {
+	if (!_isAnim && HitCheck_Line_Triangle(_player3DPosi, _endPlayerPosi, _vertex1, _vertex2, _vertex3).HitFlag) {
 		_pStrongBox->PlayAnimation(0);
 		_pSoundManager->PlaySEInGame(SoundManager::InGame::BoxOpen);
 		_isAnim = true;

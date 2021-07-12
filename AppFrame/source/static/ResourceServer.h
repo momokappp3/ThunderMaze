@@ -21,5 +21,6 @@ public:
 
 	//2D
 	static int LoadGraph(const TCHAR* FileName);
+	static int DerivationGraph(int x, int y, int width, int height, int handle, const TCHAR* FileName);
 	static bool DeleteGraph(int handle);
 };

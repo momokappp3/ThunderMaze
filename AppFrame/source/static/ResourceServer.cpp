@@ -88,6 +88,22 @@ int ResourceServer::LoadGraph(const TCHAR* FileName) {
     return cg;   //識別番号を返す
 }
 
+int ResourceServer::DerivationGraph(int x, int y, int width, int height, int handle, const TCHAR* FileName) {
+
+    // キーの検索
+    auto itr = _mapGraph2D.find(FileName);  //引数のファイル名のキーの位置
+
+    if (itr != _mapGraph2D.end()) {   //最終要素の次ではなかったら
+        return itr->second;   //second = ハンドル
+    }
+
+    int cg = DxLib::DerivationGraph(x, y, width, height, handle);     // DXLIBのAPIを呼ぶので、::を先頭に付け、このクラスの同じ名前の関数と区別する
+    // キーとデータをmapに登録
+    _mapGraph2D[FileName] = cg;
+
+    return cg;   //識別番号を返す
+}
+
 bool ResourceServer::DeleteGraph(int handle) {
 
     if (handle == -1) {
