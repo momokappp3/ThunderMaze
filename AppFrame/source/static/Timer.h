@@ -22,6 +22,10 @@ public:
     int GetNowTimeSeconds();
     Point GetNowTimeMinutes();
 
+    void AddTime(int seconds) {
+        _startNum += seconds;
+    }
+
 private:
     int _startTime;
     int _startNum;

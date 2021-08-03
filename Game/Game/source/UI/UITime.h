@@ -25,6 +25,14 @@ public:
         _isStop = stop;
     }
 
+    bool AddTime(int seconds) {
+        if (_pTimer == nullptr) {
+            return false;
+        }
+        _pTimer->AddTime(seconds);
+        return true;
+    }
+
     bool GetEndNow() {
         return _isTimeEnd;
     }

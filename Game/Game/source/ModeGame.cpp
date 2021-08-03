@@ -85,7 +85,7 @@ bool ModeGame::Process() {
 	if (_pKeyInput->_key[(KEY_INPUT_U)] == 1) {
 		_pItem->SetItem(ITEM::TimeLong);
 	}
-	
+
 	_pUIItem->SetUpperItem(_pItem->GetUpperItem());
 	_pUIItem->SetMiddleItem(_pItem->GetMiddleItem());
 	_pUIItem->SetDownItem(_pItem->GetDownItem());
@@ -120,6 +120,28 @@ bool ModeGame::Process() {
 	 }
 	 else {
 		 _pUIPopUp->SetNowMode(false);
+	 }
+
+	 //=================================================
+	 //アイテム使用
+	 if (_pKeyInput->_key[(KEY_INPUT_X)] == 1) {
+
+		 switch (_pItem->GetMiddleItem()){
+		 case ITEM::Barrier:
+			// _pUIPopUp->SetPopString({ "バリア" ,573,403,true });
+			 break;
+		 case ITEM::Portion:
+			// _pUIPopUp->SetPopString({ "回復薬" ,573,403,true });
+			 break;
+		 case ITEM::Through:
+			// _pUIPopUp->SetPopString({ "すり抜け" ,573,403,true });
+			 break;
+		 case ITEM::TimeLong:
+			 _pUITime->AddTime(100);
+			 break;
+		 default:
+			 break;
+		 }
 	 }
 
 	 //=======================================================
