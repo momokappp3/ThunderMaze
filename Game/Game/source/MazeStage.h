@@ -49,8 +49,12 @@ public:
 		return _pDoor->GetHandle();
 	}
 
-	std::unique_ptr<StrongBox>& GetBox() {
-		return _pStrongBox;
+	std::unique_ptr<StrongBox>& GetBox(int num) {
+		return _pStrongBox[num];
+	}
+
+	int GetStrongSize() {
+		return _pStrongBox.size();
 	}
 
 	//行き止まりのタイプ
@@ -71,7 +75,7 @@ private:
 	void SearchNoPassage();  //行き止まりと行き止まりのタイプを判定
 
 	std::unique_ptr<ModelAnimation> _pDoor;
-	std::unique_ptr<StrongBox> _pStrongBox;
+	std::vector<std::unique_ptr<StrongBox>> _pStrongBox;
 	std::unique_ptr<Input> _pKeyInput;
 	std::shared_ptr<SoundManager> _pSoundManeger;
 	std::vector<std::tuple<int, int, NoPassageType>> _noPassageList;  //行き止まりの座標とタイプ
@@ -90,6 +94,8 @@ private:
 
 		ECG_STAR,
 		ECG_HEART,
+
+		ECG_STRONGBOX,
 
 		_ECG_EOT_	// End of table.
 	};

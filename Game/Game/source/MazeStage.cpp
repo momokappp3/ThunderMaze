@@ -39,6 +39,7 @@ MazeStage::MazeStage() {
 	_effectTime = 0;
 
 	_pSoundManeger = nullptr;
+	_pStrongBox.clear();
 }
 
 MazeStage::~MazeStage() {
@@ -66,6 +67,7 @@ bool MazeStage::Initialize(std::shared_ptr<SoundManager> sound) {
 	cg[ECG_CHIP_GREEN] = ResourceServer::LoadGraph("png/stage/chip_green.png");
 	cg[ECG_STAR] = ResourceServer::LoadGraph("png/stage/star.png");
 	cg[ECG_HEART] = ResourceServer::LoadGraph("png/stage/heart.png");
+	cg[ECG_STRONGBOX] = ResourceServer::LoadGraph("png/stage/strong.png");
 
 	StageInit();  	   // ステージ初期化
 	SearchNoPassage(); // 行き止まりを探す
@@ -84,9 +86,14 @@ bool MazeStage::Initialize(std::shared_ptr<SoundManager> sound) {
 	//==============================================
 	//宝箱 設置する場所
 	//(プレイヤーの二個隣)  (行き止まりに設置する)
-	_pStrongBox.reset(new StrongBox);
-	_pStrongBox->Init(_pSoundManeger,{ BLOCK_SIZE * plx + 180, 0.0f, BLOCK_SIZE * -ply });
 
+	for (int i = 0; i < /*_noPassageList.size()*/50; i++) {  //落ちる
+		_pStrongBox.push_back(nullptr);
+		_pStrongBox[i].reset(new StrongBox);
+
+		_pStrongBox[i]->Init(_pSoundManeger, { BLOCK_SIZE * static_cast<float>(std::get<0>(_noPassageList[i])), 0.0f,
+							 BLOCK_SIZE * -static_cast<float>(std::get<1>(_noPassageList[i])) });
+	}
 
 	/*
 	auto hoge = _noPassageList[0];
@@ -441,7 +448,10 @@ bool MazeStage::Process() {
 
 	_pKeyInput->Process();
 	_pDoor->Process();
-	_pStrongBox->Process();
+
+	for (int i = 0; i < _pStrongBox.size(); i++) {
+		_pStrongBox[i]->Process();
+	}
 
 	return true;
 }
@@ -591,7 +601,7 @@ void MazeStage::GameDraw() {
 		DrawGraph(plx * CHIP_W, ply * CHIP_H, cg[ECG_STAR], TRUE);	// 2Dプレイヤー
 
 
-		for (int i = 0; i < _noPassageList.size(); i++) {
+		for (int i = 0; i < 50; i++) {
 
 			auto hoge = _noPassageList[i];
 
@@ -717,7 +727,10 @@ void MazeStage::GameDraw() {
 					if (HitCheck_Line_Triangle(_player3DPosi, endPlayerPosi, vertex1, vertex2, vertex3Anime).HitFlag) {
 						_pDoor->PlayAnimation(0);
 					}
-					_pStrongBox->SetPlayerPosition(_player3DPosi, endPlayerPosi);
+
+					for (int i = 0; i < _pStrongBox.size(); i++) {
+						_pStrongBox[i]->SetPlayerPosition(_player3DPosi, endPlayerPosi);
+					}
 					//================
 					//雷とプレイヤーの当たり判定
 
@@ -766,7 +779,10 @@ void MazeStage::GameDraw() {
 		_effectTime++;
 
 		_pDoor->Draw();
-		_pStrongBox->Draw();
+
+		for (int i = 0; i < _pStrongBox.size(); i++) {
+			_pStrongBox[i]->Draw();
+		}
 	}
 	
 	// 描画速度表示

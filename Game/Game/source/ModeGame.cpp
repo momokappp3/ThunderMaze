@@ -121,32 +121,34 @@ bool ModeGame::Process() {
 	 //=======================================================
 	 //宝箱のポップアップ&アイテム
 
-	 if (_pMazeStage->GetBox()->GetIsPopUp()) {
-		 _pUIPopUp->SetNowMode(true);
-		 if (_pMazeStage->GetBox()->GetIsItem()) {
+	 for (int i = 0; i < _pMazeStage->GetStrongSize(); i++) {
+		 if (_pMazeStage->GetBox(i)->GetIsPopUp()) {
+			 _pUIPopUp->SetNowMode(true);
+			 if (_pMazeStage->GetBox(i)->GetIsItem()) {
 
-			 switch (_pMazeStage->GetBox()->GetItemNum()){
-			 case ITEM::Barrier:
-				 _pUIPopUp->SetPopString({ "バリア" ,573,403,true });
-				 break;
-			 case ITEM::Portion:
-				 _pUIPopUp->SetPopString({ "回復薬" ,573,403,true });
-				 break;
-			 case ITEM::Through :
-				 _pUIPopUp->SetPopString({ "すり抜け" ,573,403,true });
-				 break;
-			 default:
-				 break;
-			 }
+				 switch (_pMazeStage->GetBox(i)->GetItemNum()) {
+				 case ITEM::Barrier:
+					 _pUIPopUp->SetPopString({ "バリア" ,573,403,true });
+					 break;
+				 case ITEM::Portion:
+					 _pUIPopUp->SetPopString({ "回復薬" ,573,403,true });
+					 break;
+				 case ITEM::Through:
+					 _pUIPopUp->SetPopString({ "すり抜け" ,573,403,true });
+					 break;
+				 default:
+					 break;
+				 }
 
-			 if (_pKeyInput->_key[(KEY_INPUT_RETURN)] == 1) {
-				 _pMazeStage->GetBox()->SetIsItem(false);
-				 _pItem->SetItem(_pMazeStage->GetBox()->GetItemNum());
-				 _pSoundManager->PlaySECommon(SoundManager::SECommon::OK);
+				 if (_pKeyInput->_key[(KEY_INPUT_RETURN)] == 1) {
+					 _pMazeStage->GetBox(i)->SetIsItem(false);
+					 _pItem->SetItem(_pMazeStage->GetBox(i)->GetItemNum());
+					 _pSoundManager->PlaySECommon(SoundManager::SECommon::OK);
+				 }
 			 }
-		 }
-		 else {
-			 _pUIPopUp->SetPopString({ "何も入っていない" ,553,403,true });
+			 else {
+				 _pUIPopUp->SetPopString({ "何も入っていない" ,553,403,true });
+			 }
 		 }
 	 }
 

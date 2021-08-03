@@ -47,7 +47,7 @@ bool StrongBox::Init(std::shared_ptr<SoundManager>sound,VECTOR point) {
     _point = point;
 
 	_pStrongBox.reset(new ModelAnimation);
-	_pStrongBox->Load("model/boxAnime5.mv1");
+	_pStrongBox->Load("model/boxAnime5.mv1",true);
 
 	if (_pStrongBox->GetHandle() == -1) {
 		return false;
