@@ -13,7 +13,7 @@ public:
     StrongBox();
     virtual ~StrongBox();
 
-    bool Init(std::shared_ptr<SoundManager> sound,VECTOR point);
+    bool Init(std::shared_ptr<SoundManager> sound,VECTOR point, NoPassageType type);
     void Process();
     void Draw();
 

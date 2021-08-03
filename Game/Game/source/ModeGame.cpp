@@ -81,6 +81,10 @@ bool ModeGame::Process() {
 	if (_pKeyInput->_key[(KEY_INPUT_Y)] == 1) {
 		_pItem->SetItem(ITEM::Through);
 	}
+
+	if (_pKeyInput->_key[(KEY_INPUT_U)] == 1) {
+		_pItem->SetItem(ITEM::TimeLong);
+	}
 	
 	_pUIItem->SetUpperItem(_pItem->GetUpperItem());
 	_pUIItem->SetMiddleItem(_pItem->GetMiddleItem());
@@ -135,6 +139,9 @@ bool ModeGame::Process() {
 					 break;
 				 case ITEM::Through:
 					 _pUIPopUp->SetPopString({ "‚·‚è”²‚¯" ,573,403,true });
+					 break;
+				 case ITEM::TimeLong:
+					 _pUIPopUp->SetPopString({ "ŠÔ" ,573,403,true });
 					 break;
 				 default:
 					 break;

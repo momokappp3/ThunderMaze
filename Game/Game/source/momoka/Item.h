@@ -69,4 +69,6 @@ private:
     std::vector<ITEM> _vItem;  //Œ»İ“ü‚Á‚Ä‚¢‚éƒAƒCƒeƒ€
 
     int _itemSelect;  //_vItem‚Ì‰½”Ô–Ú‚©
+
+    std::vector<int> _vDelItemList;
 };

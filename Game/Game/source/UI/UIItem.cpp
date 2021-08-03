@@ -68,6 +68,15 @@ bool UIItem::Init() {
 	info = { handle,0,0,false };
 	SetDrawInfo(info);
 
+	handle = ResourceServer::LoadGraph("png/gameUI/timeLong.png");
+
+	if (handle == -1) {
+		return false;
+	}
+
+	info = { handle,0,0,false };
+	SetDrawInfo(info);
+
 
     return true;
 }

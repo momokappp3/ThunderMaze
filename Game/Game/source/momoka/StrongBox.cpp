@@ -25,7 +25,7 @@ StrongBox::StrongBox() {
 StrongBox::~StrongBox() {
 }
 
-bool StrongBox::Init(std::shared_ptr<SoundManager>sound,VECTOR point) {
+bool StrongBox::Init(std::shared_ptr<SoundManager>sound,VECTOR point, NoPassageType type) {
 
 	_pSoundManager = sound;
 
@@ -59,8 +59,32 @@ bool StrongBox::Init(std::shared_ptr<SoundManager>sound,VECTOR point) {
 	//設置する場所
 	//(プレイヤーの二個隣)  (行き止まりに設置する)
 	_pStrongBox->GetTransform().SetPosition(_point);
-	_pStrongBox->GetTransform().SetScale({ 0.18f, 0.18f, 0.18f });
-	_pStrongBox->GetTransform().SetDirection({ 0.0f,0.0f,120.0f });
+	_pStrongBox->GetTransform().SetScale({ 0.18f, 0.18f, 0.18f });  //大きさ
+	_pStrongBox->GetTransform().SetDirection(_pStrongBox->GetHandle(), { 0.0f,0.0f,120.0f });
+
+	switch (type){
+	case NoPassageType::UP:
+		//_pStrongBox->GetTransform().SetRotateY(180.0f);
+
+		break;
+	case NoPassageType::RIGHT:
+		//_pStrongBox->GetTransform().SetDirection(_pStrongBox->GetHandle(),{ 0.0f,0.0f,120.0f });
+		//_pStrongBox->GetTransform().SetPosition({ _point.x ,100.0f,_point.z});
+		break;
+	case NoPassageType::DOWN:
+		//_pStrongBox->GetTransform().SetDirection({ 0.0f,0.0f,120.0f });
+		//_pStrongBox->GetTransform().SetPosition({ _point.x ,100.0f,_point.z });
+		break;
+	case NoPassageType::LEFT:
+		//_pStrongBox->GetTransform().SetDirection({ 0.0f,0.0f,120.0f });
+		//_pStrongBox->GetTransform().SetPosition({ _point.x ,100.0f,_point.z });
+		break;
+	case NoPassageType::MAX:
+		return false;
+		break;
+	default:
+		break;
+	}
 
 	_vertex1 = { _point.x - 20.0f,_point.y,_point.z };
 	_vertex2 = { _point.x + 20.0f,_point.y,_point.z };
@@ -70,7 +94,7 @@ bool StrongBox::Init(std::shared_ptr<SoundManager>sound,VECTOR point) {
 	//=============================================
 	//ランダムでアイテムを何にするか決める
 	//保持(4～6)
-	_itemNum = MTRandom::Get(4, 6);
+	_itemNum = MTRandom::Get(4, 7);
 
     return true;
 }

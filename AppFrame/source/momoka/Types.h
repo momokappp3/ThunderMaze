@@ -30,5 +30,16 @@ enum class ITEM {
 	Barrier = 4,
 	Portion,
 	Through,
+	TimeLong,
+
 	None = 0
+};
+
+//行き止まりのタイプ
+enum class NoPassageType {
+	UP = 0,
+	RIGHT,
+	DOWN,
+	LEFT,
+	MAX
 };

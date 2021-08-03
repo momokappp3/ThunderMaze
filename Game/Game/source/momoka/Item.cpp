@@ -1,13 +1,13 @@
 #include "Item.h"
 #include "Dxlib.h"
 
-
 Item::Item() {
 
     _vItem.clear();
     _itemSelect = 0;
     _pInput = nullptr;
     _pSoundManager = nullptr;
+    _vDelItemList.clear();
 }
 
 Item::~Item() {
@@ -33,6 +33,14 @@ bool Item::Init(std::shared_ptr<SoundManager> sound) {
 
 void Item::Process(){
 
+    //íœ—\–ñ‚ª‚ ‚Á‚½‚çíœ‚·‚é
+    if (_vDelItemList.size() > 0) {
+        for (int i = 0; i < _vDelItemList.size(); i++) {
+            _vItem.erase(_vItem.begin() + _vDelItemList[i]);
+        }
+        _vDelItemList.clear();
+    }
+
     if (!_vItem.empty()) {
         _pInput->Process();
 
@@ -45,6 +53,18 @@ void Item::Process(){
             if (_pInput->_key[(KEY_INPUT_C)] == 1) {
                 _itemSelect = (_itemSelect + (_vItem.size() - 1)) % _vItem.size();
                 _pSoundManager->PlaySECommon(SoundManager::SECommon::Select);
+            }
+
+            //Žg—p
+            if (_pInput->_key[(KEY_INPUT_X)] == 1) {
+                if (_vItem[_itemSelect] == ITEM::None) {
+                    _vDelItemList.push_back( _itemSelect - 1);
+                }
+                _vDelItemList.push_back(_itemSelect);
+
+                if (_vItem[_itemSelect] == ITEM::None) {
+                    _vDelItemList.push_back(_itemSelect + 1);
+                }
             }
         }
     }
