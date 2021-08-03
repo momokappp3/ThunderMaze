@@ -73,12 +73,14 @@ private:
 	int CheckChipRoute(int x1, int y1, int x2, int y2, int cntmax);
 	int MakeShortRoute(int x1, int y1, int x2, int y2, int cntmax);
 	void SearchNoPassage();  //行き止まりと行き止まりのタイプを判定
+	void PutObject(int strongBoxNum);
 
 	std::unique_ptr<ModelAnimation> _pDoor;
 	std::vector<std::unique_ptr<StrongBox>> _pStrongBox;
 	std::unique_ptr<Input> _pKeyInput;
 	std::shared_ptr<SoundManager> _pSoundManeger;
 	std::vector<std::tuple<int, int, NoPassageType>> _noPassageList;  //行き止まりの座標とタイプ
+	std::vector<std::tuple<int, int, NoPassageType>> _putStrongList;  //宝箱を置くところ
 
 	static const int CHIP_W = 16;
 	static const int CHIP_H = 16;

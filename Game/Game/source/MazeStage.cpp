@@ -20,6 +20,9 @@ const float BLOCK_SIZE = 80.0f;			// ブロックのサイズ
 const float CAMERA_Y = (BLOCK_SIZE / 2.0f);	// カメラの高さ
 const float	MOVE_BLOCK_SPEED = 20.0f;		// 1ブロック移動するフレーム数
 
+//ゲーム要素
+const int STORNGBOX_NUM = 70;
+
 MazeStage::MazeStage() {
 
 	//_player3DPosi = { 0,0,0 };
@@ -40,15 +43,12 @@ MazeStage::MazeStage() {
 
 	_pSoundManeger = nullptr;
 	_pStrongBox.clear();
+	_putStrongList.clear();
 }
 
 MazeStage::~MazeStage() {
-
-	// エフェクトリソースを削除する。(Effekseer終了時に破棄されるので削除しなくてもいい)
-	DeleteEffekseerEffect(_effectLoadHandle);
-
-	// Effekseerを終了する。
-	Effkseer_End();
+	DeleteEffekseerEffect(_effectLoadHandle);  // エフェクトリソースを削除する
+	Effkseer_End();  // Effekseerを終了する。
 }
 
 bool MazeStage::Initialize(std::shared_ptr<SoundManager> sound) {
@@ -71,6 +71,7 @@ bool MazeStage::Initialize(std::shared_ptr<SoundManager> sound) {
 
 	StageInit();  	   // ステージ初期化
 	SearchNoPassage(); // 行き止まりを探す
+	PutObject(STORNGBOX_NUM);
 
 	// プレイヤー位置を、上端（のひとつ内側）から選択
 	while (1) {
@@ -87,12 +88,12 @@ bool MazeStage::Initialize(std::shared_ptr<SoundManager> sound) {
 	//宝箱 設置する場所
 	//(プレイヤーの二個隣)  (行き止まりに設置する)
 
-	for (int i = 0; i < /*_noPassageList.size()*/50; i++) {  //落ちる
+	for (int i = 0; i < _putStrongList.size(); i++) {  //落ちる
 		_pStrongBox.push_back(nullptr);
 		_pStrongBox[i].reset(new StrongBox);
 
-		_pStrongBox[i]->Init(_pSoundManeger, { BLOCK_SIZE * static_cast<float>(std::get<0>(_noPassageList[i])), 0.0f,
-							 BLOCK_SIZE * -static_cast<float>(std::get<1>(_noPassageList[i])) });
+		_pStrongBox[i]->Init(_pSoundManeger, { BLOCK_SIZE * static_cast<float>(std::get<0>(_putStrongList[i])), 0.0f,
+							 BLOCK_SIZE * -static_cast<float>(std::get<1>(_putStrongList[i])) });
 	}
 
 	/*
@@ -285,6 +286,22 @@ void MazeStage::SearchNoPassage() {
 					break;
 				}
 			}
+		}
+	}
+}
+
+void MazeStage::PutObject(int strongBoxNum) {
+
+	int size = _noPassageList.size();
+	int probability = size / (strongBoxNum - 5);
+	
+	for (int i = 0; i < _noPassageList.size(); i++) {
+		if (_putStrongList.size() > strongBoxNum) {
+			break;
+		}
+
+		if (i % probability == 0) {
+			_putStrongList.push_back(_noPassageList[i]);
 		}
 	}
 }
@@ -601,7 +618,7 @@ void MazeStage::GameDraw() {
 		DrawGraph(plx * CHIP_W, ply * CHIP_H, cg[ECG_STAR], TRUE);	// 2Dプレイヤー
 
 
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < _noPassageList.size(); i++) {
 
 			auto hoge = _noPassageList[i];
 
@@ -609,6 +626,17 @@ void MazeStage::GameDraw() {
 			auto y = std::get<1>(hoge);
 
 			DrawGraph(x * CHIP_W, y * CHIP_H, cg[ECG_CHIP_BLUE], TRUE);
+		}
+		
+		for (int i = 0; i < _putStrongList.size(); i++) {
+
+			auto hoge = _putStrongList[i];
+
+			auto x = std::get<0>(hoge);
+			auto y = std::get<1>(hoge);
+
+			DrawGraph(x * CHIP_W, y * CHIP_H, cg[ECG_STRONGBOX], TRUE);
+
 		}
 
 		// 情報表示
